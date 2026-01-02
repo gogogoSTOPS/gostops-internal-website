@@ -1,11 +1,18 @@
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import MainLayout from './layouts/MainLayout'
+import Dashboard from './pages/Dashboard'
 import './App.css'
 
 function App() {
-
   return (
-    <div className="text-3xl font-bold underline text-center text-blue-600">
-      Hello!
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<MainLayout />}>
+          <Route index element={<Dashboard />} />
+       
+        </Route>
+      </Routes>
+    </BrowserRouter>
   )
 }
 

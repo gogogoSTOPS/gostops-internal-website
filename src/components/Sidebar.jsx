@@ -43,6 +43,7 @@ const Sidebar = ({ isOpen, onClose, isCollapsed, toggleCollapse, navigation, han
             onClick={toggleCollapse}
             className={`hidden md:flex flex-col cursor-pointer items-start p-2 w-9 h-9
               ${isCollapsed ? 'items-center justify-center' : ''}
+              ${isCollapsed ? "rotate-180" : ""}
             `}
           >
             <CloseIconDesktop />

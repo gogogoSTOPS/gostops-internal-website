@@ -142,13 +142,13 @@ const ReviewCard = ({ item }) => {
           }
           {item.status == "pending" &&
             <div className="flex flex-col md:flex-row gap-2">
-              <button className="flex items-center justify-center w-full md:w-auto bg-[#008000] px-2.5 py-1.5 rounded-[0.5rem] gap-2.5">
+              <button className="flex items-center justify-center cursor-pointer w-full md:w-auto bg-[#008000] px-2.5 py-1.5 rounded-[0.5rem] gap-2.5">
                 <AcceptIcon />
                 <span className="text-white text-[0.875rem] leading-[1.25rem] font-medium">
                   Accept
                 </span>
               </button>
-              <button className="flex items-center justify-center w-full md:w-auto bg-[#D4183D] px-2.5 py-1.5 rounded-[0.5rem] gap-2.5">
+              <button className="flex items-center justify-center cursor-pointer w-full md:w-auto bg-[#D4183D] px-2.5 py-1.5 rounded-[0.5rem] gap-2.5">
                 <RejectIcon />
                 <span className="text-white text-[0.875rem] leading-[1.25rem] font-medium">
                   Reject

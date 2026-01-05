@@ -54,16 +54,18 @@ const FILTER_CONFIG = [
   },
 ];
 
-const Filters = () => {
-  const [filters, setFilters] = useState(
-    FILTER_CONFIG.reduce((acc, curr) => ({ ...acc, [curr.id]: "" }), {})
-  );
-
+const Filters = ({ filters, setFilters }) => {
   // State to track which dropdown is currently open (by ID)
   const [openDropdown, setOpenDropdown] = useState(null);
 
   // Ref for click-outside detection
   const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    setFilters(
+      FILTER_CONFIG.reduce((acc, curr) => ({ ...acc, [curr.id]: "" }), {})
+    );
+  }, []);
 
   // Close dropdowns if clicking outside
   useEffect(() => {
@@ -110,7 +112,7 @@ const Filters = () => {
             {/* TEXT INPUT */}
             {filter.type === "text" && (
               <div className={`${inputBaseStyle} gap-[0.75rem] focus-within:border-black/20 focus-within:bg-white`}>
-                {filter.icon}
+                {filter?.icon}
                 <input
                   type="text"
                   value={filters[filter.id]}

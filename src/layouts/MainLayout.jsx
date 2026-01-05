@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Outlet, useNavigate, useLocation } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import { HamburgerIcon, ReviewsIcon, DropdownIcon, UserIcon, LogoutIcon } from '../icons/svgIcons';
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { ChevronDownIcon, ClearIcon, SearchIcon } from "../icons/svgIcons";
 
-// Data
+// Filters
 const FILTER_CONFIG = [
   {
     id: "hostelName",
@@ -55,7 +55,6 @@ const FILTER_CONFIG = [
 ];
 
 const Filters = () => {
-  // State for form values
   const [filters, setFilters] = useState(
     FILTER_CONFIG.reduce((acc, curr) => ({ ...acc, [curr.id]: "" }), {})
   );
@@ -79,7 +78,7 @@ const Filters = () => {
 
   const handleChange = (name, value) => {
     setFilters((prev) => ({ ...prev, [name]: value }));
-    setOpenDropdown(null); // Close dropdown after selection
+    setOpenDropdown(null);
   };
 
   const clearFilters = () => {
@@ -92,7 +91,7 @@ const Filters = () => {
     setOpenDropdown(openDropdown === id ? null : id);
   };
 
-  // Check if any filter has a value (to enable/disable Clear button)
+  // Check if any filter has a value to enable/disable Clear button
   const hasActiveFilters = Object.values(filters).some((val) => val !== "");
 
   const labelStyle = "text-[#0A0A0A] text-[0.875rem] font-medium leading-[0.875rem] -tracking-[0.15px]";
@@ -108,7 +107,7 @@ const Filters = () => {
           <div key={filter.id} className="flex flex-col items-start gap-[0.5rem] w-full relative">
             <label className={labelStyle}>{filter.label}</label>
 
-            {/* --- TYPE: TEXT INPUT --- */}
+            {/* TEXT INPUT */}
             {filter.type === "text" && (
               <div className={`${inputBaseStyle} gap-[0.75rem] focus-within:border-black/20 focus-within:bg-white`}>
                 {filter.icon}
@@ -122,7 +121,7 @@ const Filters = () => {
               </div>
             )}
 
-            {/* --- TYPE: CUSTOM SELECT DROPDOWN --- */}
+            {/* CUSTOM SELECT DROPDOWN */}
             {filter.type === "select" && (
               <div className="relative w-full">
                 {/* Trigger Button */}

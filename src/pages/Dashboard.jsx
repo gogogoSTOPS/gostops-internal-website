@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Filters from "../components/Filters";
+import ReviewCard from "../components/ReviewCard";
 
 const Dashboard = () => {
   const [selected, setSelected] = useState('Total Claims');
@@ -35,9 +36,14 @@ const Dashboard = () => {
       </div>
 
       {/* Content */}
-      <div className="bg-white rounded-[0.875rem] border-[0.874px] md:border border-[rgba(0,0,0,0.1)] p-4 md:p-6 flex flex-col">
-        {/* Filters */}
+      {/* Filters */}
+      <div className="bg-white rounded-[0.875rem] border-[0.874px] md:border border-[rgba(0,0,0,0.1)] p-4 md:p-6">
         <Filters />
+      </div>
+
+      {/* Cards */}
+      <div className="flex flex-col gap-4">
+        {[1, 2, 3].map(() => <ReviewCard />)}
       </div>
     </div>
   )

@@ -8,6 +8,11 @@ const LoginPage = () => {
   const [email, setEmail] = useState("");
   const navigate = useNavigate();
 
+  const handleSubmitEmail = () => {
+    console.log("Email submitted:", email);
+    setMode("otp");
+  }
+
   const handleVerify = () => {
     console.log("Verified successfully");
     navigate("/");
@@ -21,7 +26,7 @@ const LoginPage = () => {
           <EmailView
             email={email}
             setEmail={setEmail}
-            onSubmit={() => setMode("otp")}
+            onSubmit={handleSubmitEmail}
           />
         ) : (
           <OTPView

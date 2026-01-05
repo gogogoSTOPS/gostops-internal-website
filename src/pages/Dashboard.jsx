@@ -1,37 +1,25 @@
 const Dashboard = () => {
   const stats = [
-    { name: 'Total Team Members', value: '24', change: '+2', changeType: 'positive' },
-    { name: 'Active Projects', value: '12', change: '+3', changeType: 'positive' },
-    { name: 'Completed Tasks', value: '156', change: '+12', changeType: 'positive' },
-    { name: 'Pending Reviews', value: '8', change: '-2', changeType: 'negative' },
+    { name: 'Total Claims', value: '24', textColor: 'text-[#0A0A0A]'  },
+    { name: 'Pending', value: '12', textColor: 'text-[#FF9800]' },
+    { name: 'Accepted', value: '156', textColor: 'text-[#008000]' },
+    { name: 'Rejected', value: '8', textColor: 'text-[#FF0000]' },
   ]
 
   return (
     <div className="space-y-6">
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         {stats.map((stat) => (
           <div
             key={stat.name}
-            className="bg-white rounded-lg shadow-sm border border-gray-200 p-6"
+            className="bg-white rounded-[0.625rem] gap-1 border-[0.823px] border-[rgba(0,0,0,0.1)] md:border md:border-[rgba(0,0,0,0.2)] p-[1.125rem]"
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">{stat.name}</p>
-                <p className="mt-2 text-3xl font-bold text-gray-900">{stat.value}</p>
+                <p className="text-[0.875rem] leading-[1.25rem] font-normal text-[#717182]">{stat.name}</p>
+                <p className={`mt-2 text-[1.5rem] leading-[2rem] font-bold ${stat.textColor}`}>{stat.value}</p>
               </div>
-            </div>
-            <div className="mt-4">
-              <span
-                className={`inline-flex items-center text-sm font-medium ${
-                  stat.changeType === 'positive'
-                    ? 'text-green-600'
-                    : 'text-red-600'
-                }`}
-              >
-                {stat.changeType === 'positive' ? '↑' : '↓'} {stat.change}
-              </span>
-              <span className="ml-2 text-sm text-gray-500">from last month</span>
             </div>
           </div>
         ))}

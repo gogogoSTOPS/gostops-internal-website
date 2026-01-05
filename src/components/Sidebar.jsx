@@ -77,7 +77,7 @@ const Sidebar = ({ isOpen, onClose, isCollapsed, toggleCollapse, navigation, han
           {/* Close/Toggle Icon */}
           <button
             onClick={toggleCollapse}
-            className={`hidden md:flex flex-col items-start p-2 w-9 h-9
+            className={`hidden md:flex flex-col cursor-pointer items-start p-2 w-9 h-9
               ${isCollapsed ? 'items-center justify-center' : ''}
             `}
           >
@@ -87,7 +87,7 @@ const Sidebar = ({ isOpen, onClose, isCollapsed, toggleCollapse, navigation, han
           {/* Mobile Close Icon */}
           <button
             onClick={onClose}
-            className="md:hidden flex flex-col items-start p-2 w-9 h-9"
+            className="md:hidden flex flex-col cursor-pointer items-start p-2 w-9 h-9"
           >
             <CloseIconMobile />
           </button>

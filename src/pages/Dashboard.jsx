@@ -1,54 +1,43 @@
+import { useState } from "react";
+import Filters from "../components/Filters";
+
 const Dashboard = () => {
+  const [selected, setSelected] = useState('Total Claims');
   const stats = [
-    { name: 'Total Claims', value: '24', textColor: 'text-[#0A0A0A]'  },
+    { name: 'Total Claims', value: '24', textColor: 'text-[#0A0A0A]' },
     { name: 'Pending', value: '12', textColor: 'text-[#FF9800]' },
     { name: 'Accepted', value: '156', textColor: 'text-[#008000]' },
     { name: 'Rejected', value: '8', textColor: 'text-[#FF0000]' },
   ]
 
   return (
-    <div className="space-y-6">
+    <div className="max-w-7xl mx-auto px-4 md:px-6 py-4 md:py-6 gap-6 flex flex-col">
       {/* Stats Grid */}
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-        {stats.map((stat) => (
-          <div
-            key={stat.name}
-            className="bg-white rounded-[0.625rem] gap-1 border-[0.823px] border-[rgba(0,0,0,0.1)] md:border md:border-[rgba(0,0,0,0.2)] p-[1.125rem]"
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-[0.875rem] leading-[1.25rem] font-normal text-[#717182]">{stat.name}</p>
-                <p className={`mt-2 text-[1.5rem] leading-[2rem] font-bold ${stat.textColor}`}>{stat.value}</p>
+      <div className="grid grid-cols-2 gap-3 md:gap-4 lg:grid-cols-4">
+        {stats.map((stat) => {
+          const isSelected = selected === stat.name;
+
+          return (
+            <div
+              key={stat.name}
+              className={`bg-white rounded-[0.625rem] gap-1 p-[1.125rem] border-[0.823px] md:border ${isSelected ? "border-black" : "border-[rgba(0,0,0,0.1)]"}`}
+              onClick={() => setSelected(stat.name)}
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-[0.75rem] md:text-[0.875rem] leading-[1rem] md:leading-[1.25rem] font-normal text-[#717182]">{stat.name}</p>
+                  <p className={`mt-2 text-[1.25rem] md:text-[1.5rem] leading-[1.75rem] md:leading-[2rem] font-bold ${stat.textColor}`}>{stat.value}</p>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
 
       {/* Recent Activity */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-        <div className="px-6 py-4 border-b border-gray-200">
-          <h3 className="text-lg font-semibold text-gray-900">Recent Activity</h3>
-        </div>
-        <div className="p-6">
-          <div className="space-y-4">
-            {[1, 2, 3, 4, 5].map((item) => (
-              <div key={item} className="flex items-center space-x-4">
-                <div className="flex-shrink-0">
-                  <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
-                    <span className="text-blue-600 font-medium">U{item}</span>
-                  </div>
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-900">
-                    User {item} completed a task
-                  </p>
-                  <p className="text-sm text-gray-500">2 hours ago</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+      <div className="bg-white rounded-[0.875rem] border-[0.874px] md:border border-[rgba(0,0,0,0.1)] p-4 md:p-6 flex flex-col">
+        {/* Filters */}
+        <Filters />
       </div>
     </div>
   )

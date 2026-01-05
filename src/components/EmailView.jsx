@@ -1,11 +1,5 @@
 import { useState } from "react";
-
-const EmailIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-    <path d="M13.332 2.66602H2.66536C1.92898 2.66602 1.33203 3.26297 1.33203 3.99935V11.9993C1.33203 12.7357 1.92898 13.3327 2.66536 13.3327H13.332C14.0684 13.3327 14.6654 12.7357 14.6654 11.9993V3.99935C14.6654 3.26297 14.0684 2.66602 13.332 2.66602Z" stroke="#717182" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round" />
-    <path d="M14.6654 4.66602L8.68536 8.46602C8.47955 8.59497 8.24158 8.66336 7.9987 8.66336C7.75582 8.66336 7.51785 8.59497 7.31203 8.46602L1.33203 4.66602" stroke="#717182" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round" />
-  </svg>
-);
+import { EmailIcon } from "../icons/svgIcons";
 
 const EmailView = ({ email, setEmail, onSubmit }) => {
   const [error, setError] = useState("");

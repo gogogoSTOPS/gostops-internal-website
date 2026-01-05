@@ -1,11 +1,5 @@
 import { useRef, useState, useEffect } from "react";
-
-const BackIcon = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-    <path d="M7.9987 12.6673L3.33203 8.00065L7.9987 3.33398" stroke="#0A0A0A" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round" />
-    <path d="M12.6654 8H3.33203" stroke="#0A0A0A" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round" />
-  </svg>
-);
+import { BackIcon } from "../icons/svgIcons";
 
 const OTPView = ({ email, onBack, onVerify }) => {
   const OTP_LENGTH = 6;

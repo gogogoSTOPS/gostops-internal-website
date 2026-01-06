@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { HostelIcon, DateIcon, BookingOrderIcon, OTAIcon, PhoneIcon, CardEmailIcon, AcceptIcon, RejectIcon } from '../icons/svgIcons';
 import ImageViewer from './ImageViewer';
+import Popup from './Popup';
 
 const ReviewCard = ({ item }) => {
   const [showImage, setShowImage] = useState(false);
   const [showImageURL, setShowImageURL] = useState("");
+  const [showPopup, setShowPopup] = useState(false);
+  const [popUpMode, setPopUpMode] = useState("");
 
   const getStatusColor = (status) => {
     switch (status?.toLowerCase()) {
@@ -153,13 +156,25 @@ const ReviewCard = ({ item }) => {
             }
             {item.status == "pending" &&
               <div className="flex flex-col md:flex-row gap-2">
-                <button className="flex items-center justify-center cursor-pointer w-full md:w-auto bg-[#008000] px-2.5 py-1.5 rounded-[0.5rem] gap-2.5">
+                <button
+                  onClick={() => {
+                    setPopUpMode("accept");
+                    setShowPopup(true);
+                  }}
+                  className="flex items-center justify-center cursor-pointer w-full md:w-auto bg-[#008000] px-2.5 py-1.5 rounded-[0.5rem] gap-2.5"
+                >
                   <AcceptIcon />
                   <span className="text-white text-[0.875rem] leading-[1.25rem] font-medium">
                     Accept
                   </span>
                 </button>
-                <button className="flex items-center justify-center cursor-pointer w-full md:w-auto bg-[#D4183D] px-2.5 py-1.5 rounded-[0.5rem] gap-2.5">
+                <button
+                  onClick={() => {
+                    setPopUpMode("reject");
+                    setShowPopup(true);
+                  }}
+                  className="flex items-center justify-center cursor-pointer w-full md:w-auto bg-[#D4183D] px-2.5 py-1.5 rounded-[0.5rem] gap-2.5"
+                >
                   <RejectIcon />
                   <span className="text-white text-[0.875rem] leading-[1.25rem] font-medium">
                     Reject
@@ -179,7 +194,16 @@ const ReviewCard = ({ item }) => {
           setShowImage={setShowImage}
           showImageURL={showImageURL}
           setShowImageURL={setShowImageURL}
-        />}
+        />
+      }
+      {
+        showPopup &&
+        <Popup
+          mode={popUpMode}
+          setShowPopup={setShowPopup}
+          claimId={item.claimId}
+        />
+      }
     </>
   )
 }

@@ -178,11 +178,11 @@ const DownloadIcon = () => (
   </svg>
 );
 
-const ImageCloseIcon = () => (
+const CloseIcon = ({ stroke = "white" }) => (
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" className="w-full h-full shrink-0">
-    <path d="M12 4L4 12" stroke="white" strokeWidth="1.33333" strokeLinecap="round" />
-    <path d="M4 4L12 12" stroke="white" strokeWidth="1.33333" strokeLinecap="round" />
+    <path d="M12 4L4 12" stroke={stroke} strokeWidth="1.33333" strokeLinecap="round" />
+    <path d="M4 4L12 12" stroke={stroke} strokeWidth="1.33333" strokeLinecap="round" />
   </svg>
 );
 
-export { ChevronDownIcon, SearchIcon, ClearIcon, EmailIcon, BackIcon, CloseIconDesktop, CloseIconMobile, ReviewsIcon, UserIcon, LogoutIcon, HamburgerIcon, DropdownIcon, HostelIcon, DateIcon, BookingOrderIcon, OTAIcon, PhoneIcon, CardEmailIcon, AcceptIcon, RejectIcon, DownloadIcon, ImageCloseIcon };
+export { ChevronDownIcon, SearchIcon, ClearIcon, EmailIcon, BackIcon, CloseIconDesktop, CloseIconMobile, ReviewsIcon, UserIcon, LogoutIcon, HamburgerIcon, DropdownIcon, HostelIcon, DateIcon, BookingOrderIcon, OTAIcon, PhoneIcon, CardEmailIcon, AcceptIcon, RejectIcon, DownloadIcon, CloseIcon };

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { DownloadIcon, ImageCloseIcon } from "../icons/svgIcons";
+import { DownloadIcon, CloseIcon } from "../icons/svgIcons";
 
 const ImageViewer = ({ setShowImage, showImageURL, setShowImageURL }) => {
 
@@ -59,7 +59,7 @@ const ImageViewer = ({ setShowImage, showImageURL, setShowImageURL }) => {
       {/* Viewer */}
       <div
         className="
-          relative z-10 w-full max-w-[50%]
+          relative z-10 w-full md:max-w-[50%]
           h-[80vh] md:h-[90vh]
           bg-black rounded-2xl
           grid grid-rows-[auto_1fr_1fr_1fr_auto]
@@ -72,7 +72,7 @@ const ImageViewer = ({ setShowImage, showImageURL, setShowImageURL }) => {
           </button>
 
           <button onClick={handleClose} className="w-6 h-6 cursor-pointer flex items-center justify-center">
-            <ImageCloseIcon />
+            <CloseIcon />
           </button>
         </div>
 

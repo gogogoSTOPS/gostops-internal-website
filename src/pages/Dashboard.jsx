@@ -182,19 +182,33 @@ const Dashboard = () => {
       const searchField = filters.searchField || 'all';
 
       result = result.filter((item) => {
-        if (searchField === 'id') {
-          return item.claimId.toLowerCase().includes(searchTerm);
-        }
-        if (searchField === 'name') {
-          return item.userName.toLowerCase().includes(searchTerm);
-        }
         if (searchField === 'all') {
           return (
             item.claimId.toLowerCase().includes(searchTerm) ||
             item.userName.toLowerCase().includes(searchTerm) ||
             item.email.toLowerCase().includes(searchTerm) ||
-            item.hostelName.toLowerCase().includes(searchTerm)
+            item.bookingId.toLowerCase().includes(searchTerm) ||
+            item.otaVoucherId.toLowerCase().includes(searchTerm) ||
+            item.phone.toLowerCase().includes(searchTerm)
           );
+        }
+        if (searchField === 'name') {
+          return item.userName.toLowerCase().includes(searchTerm);
+        }
+        if (searchField === 'claimId') {
+          return item.claimId.toLowerCase().includes(searchTerm);
+        }
+        if (searchField === 'bookingId') {
+          return item.bookingId.toLowerCase().includes(searchTerm);
+        }
+        if (searchField === 'otaId') {
+          return item.otaVoucherId.toLowerCase().includes(searchTerm);
+        }
+        if (searchField === 'phone') {
+          return item.phone.toLowerCase().includes(searchTerm);
+        }
+        if (searchField === 'email') {
+          return item.email.toLowerCase().includes(searchTerm);
         }
         return true;
       });

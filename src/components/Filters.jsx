@@ -17,8 +17,12 @@ const FILTER_CONFIG = [
     placeholder: "All Fields",
     options: [
       { value: "all", label: "All Fields" },
-      { value: "id", label: "Claim ID" },
       { value: "name", label: "Name" },
+      { value: "claimId", label: "Claim ID" },
+      { value: "bookingId", label: "Booking ID" },
+      { value: "otaId", label: "OTA ID" },
+      { value: "phone", label: "Phone Number" },
+      { value: "email", label: "Email" },
     ],
   },
   {

@@ -1,10 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate, Navigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import { HamburgerIcon, ReviewsIcon, DropdownIcon, UserIcon, LogoutIcon } from '../icons/svgIcons';
+import { useAuth } from '../context/AuthContext';
 
 const MainLayout = () => {
   const navigate = useNavigate();
+  const { isAuthenticated, isLoading, logout } = useAuth();
+
   const [user, setUser] = useState(true);
 
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
@@ -15,6 +18,15 @@ const MainLayout = () => {
   const navigation = [
     { name: 'Incentivise Reviews', href: '/', icon: <ReviewsIcon /> },
   ];
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  // Not logged in thenredirect to login
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
 
   useEffect(() => {
     if (!user) {
@@ -36,7 +48,8 @@ const MainLayout = () => {
   }, [profileRef]);
 
   const handleLogout = () => {
-    setUser(false);
+    logout();
+    navigate("/login", { replace: true });
   };
 
   if (!user) return null;

@@ -66,7 +66,7 @@ const EmailView = ({ email, setEmail, onSubmit }) => {
         {/* Action Button */}
         <button
           onClick={handleSubmit}
-          className="flex w-full items-center justify-center rounded-lg bg-[#030213] py-[0.5rem] px-5 md:px-[7.5rem] self-stretch"
+          className="flex w-full items-center justify-center rounded-lg bg-[#030213] py-[0.5rem] px-5 md:px-[7.5rem] self-stretch cursor-pointer"
         >
           <span className="text-white text-center text-sm font-medium leading-5 tracking-[-0.15px]">
             Send Verification Code

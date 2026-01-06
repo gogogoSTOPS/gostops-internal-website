@@ -119,7 +119,7 @@ const Filters = ({ filters, setFilters }) => {
                 {filter?.icon}
                 <input
                   type="text"
-                  value={filters[filter.id]}
+                  value={filters[filter.id] ?? ""}
                   onChange={(e) => handleChange(filter.id, e.target.value)}
                   placeholder={filter.placeholder}
                   className={textInputStyle}

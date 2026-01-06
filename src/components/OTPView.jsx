@@ -114,7 +114,7 @@ const OTPView = ({ email, onBack, onVerify }) => {
         <div className="flex flex-col items-start gap-2 self-stretch">
           <button
             onClick={handleVerify}
-            className="flex w-full items-center justify-center rounded-lg bg-[#030213] pt-[0.53rem] pb-[0.47rem] self-stretch"
+            className="flex w-full items-center justify-center rounded-lg bg-[#030213] pt-[0.53rem] pb-[0.47rem] self-stretch cursor-pointer"
           >
             <span className="text-white text-center text-sm font-medium leading-5 tracking-[-0.15px]">
               Verify Code
@@ -123,7 +123,7 @@ const OTPView = ({ email, onBack, onVerify }) => {
 
           <button
             onClick={handleResend}
-            className="flex w-full items-center justify-center pt-[0.53rem] pb-[0.47rem] self-stretch"
+            className="flex w-full items-center justify-center pt-[0.53rem] pb-[0.47rem] self-stretch cursor-pointer"
           >
             <span className="text-[#0A0A0A] text-center text-sm font-medium leading-5 tracking-[-0.15px]">
               Resend Code

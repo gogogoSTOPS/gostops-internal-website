@@ -115,7 +115,7 @@ const Sidebar = ({ isOpen, onClose, isCollapsed, toggleCollapse, navigation, han
           {/* Logout Button */}
           <button
             onClick={handleLogout}
-            className="flex w-full py-2 items-center gap-2"
+            className="flex w-full py-2 items-center gap-2 cursor-pointer"
           >
             <LogoutIcon />
             <span className="text-[#364153] text-center text-[0.875rem] font-medium leading-5 tracking-[-0.15px]">

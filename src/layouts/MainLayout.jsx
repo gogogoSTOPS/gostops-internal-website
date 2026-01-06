@@ -6,9 +6,9 @@ import { useAuth } from '../context/AuthContext';
 
 const MainLayout = () => {
   const navigate = useNavigate();
-  const { isAuthenticated, isLoading, logout } = useAuth();
+  const { isAuthenticated, isLoading, logout, user } = useAuth();
 
-  const [user, setUser] = useState(true);
+  const [userData, setUserData] = useState(user);
 
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [isDesktopSidebarCollapsed, setIsDesktopSidebarCollapsed] = useState(false);
@@ -20,10 +20,10 @@ const MainLayout = () => {
   ];
 
   useEffect(() => {
-    if (!user) {
+    if (!userData) {
       navigate('/login', { replace: true });
     }
-  }, [user, navigate]);
+  }, [userData, navigate]);
 
   // Click Outside to Close Profile Dropdown
   useEffect(() => {
@@ -52,7 +52,7 @@ const MainLayout = () => {
     return <Navigate to="/login" replace />;
   }
 
-  if (!user) return null;
+  if (!userData) return null;
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
@@ -83,7 +83,7 @@ const MainLayout = () => {
           <div className="flex md:hidden items-center">
             <button
               onClick={() => setIsMobileSidebarOpen(true)}
-              className="flex flex-col items-start p-2 w-10 h-10 shrink-0"
+              className="flex flex-col items-start p-2 w-10 h-10 shrink-0 cursor-pointer"
             >
               <HamburgerIcon />
             </button>
@@ -128,14 +128,14 @@ const MainLayout = () => {
                     User
                   </p>
                   <p className="text-[#6A7282] text-[0.875rem] font-normal leading-5 tracking-[-0.15px] mb-2">
-                    user@gostops.com
+                    userData@gostops.com
                   </p>
                 </div>
 
                 {/* Logout Button */}
                 <button
                   onClick={handleLogout}
-                  className="flex px-4 py-2 items-center gap-2 self-stretch hover:bg-gray-50 transition-colors"
+                  className="flex px-4 py-2 items-center gap-2 self-stretch hover:bg-gray-50 transition-colors cursor-pointer"
                 >
                   <LogoutIcon />
                   <span className="text-[#364153] text-center text-[0.875rem] font-medium leading-5 tracking-[-0.15px]">

@@ -6,19 +6,10 @@ import { useAuth } from '../context/AuthContext';
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const { isAuthenticated, isLoading, login, logout } = useAuth();
+  const { isAuthenticated, isLoading, login } = useAuth();
 
   const [mode, setMode] = useState("email"); // "email" | "otp"
   const [email, setEmail] = useState("");
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  // logged in then redirect to "/"
-  if (isAuthenticated) {
-    return <Navigate to="/" replace />;
-  }
 
   const handleSubmitEmail = () => {
     console.log("Email submitted:", email);
@@ -35,6 +26,15 @@ const LoginPage = () => {
     login(userData);
     navigate("/", { replace: true });
   };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  // logged in then redirect to "/"
+  if (isAuthenticated) {
+    return <Navigate to="/" replace />;
+  }
 
   return (
     <div className="flex h-screen w-full shrink-0 flex-col items-center justify-center bg-[#F9FAFB] p-4">

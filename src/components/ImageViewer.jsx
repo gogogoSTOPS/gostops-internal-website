@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { DownloadIcon, ImageCloseIcon } from "../icons/svgIcons";
 
 const ImageViewer = ({ setShowImage, showImageURL, setShowImageURL }) => {
 
@@ -21,13 +22,33 @@ const ImageViewer = ({ setShowImage, showImageURL, setShowImageURL }) => {
     setShowImageURL("");
   };
 
-  const downloadImage = () => {
-    const link = document.createElement("a");
-    link.href = showImageURL;
-    link.download = "image.jpg";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  const downloadImage = async () => {
+    try {
+      const response = await fetch(showImageURL, {
+        mode: "cors",
+      });
+
+      const blob = await response.blob();
+
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+
+      link.href = url;
+
+      // Extract filename if possible
+      const filename =
+        showImageURL.split("/").pop()?.split("?")[0] || "image.jpg";
+
+      link.download = filename;
+
+      document.body.appendChild(link);
+      link.click();
+
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Image download failed", error);
+    }
   };
 
   return (
@@ -45,20 +66,13 @@ const ImageViewer = ({ setShowImage, showImageURL, setShowImageURL }) => {
         "
       >
         {/* Buttons */}
-        <div className="flex justify-end items-center gap-4 px-4 py-4 mt-2 mr-2">
+        <div className="flex justify-end items-center gap-4 px-4 py-4 mt-2">
           <button onClick={downloadImage} className="w-6 h-6 cursor-pointer items-center justify-center flex">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" className="w-full h-full shrink-0">
-              <path d="M14 10V12.6667C14 13.0203 13.8595 13.3594 13.6095 13.6095C13.3594 13.8595 13.0203 14 12.6667 14H3.33333C2.97971 14 2.64057 13.8595 2.39052 13.6095C2.14048 13.3594 2 13.0203 2 12.6667V10" stroke="white" strokeWidth="1.33333" strokeLinecap="round" />
-              <path d="M4.66797 6.66797L8.0013 10.0013L11.3346 6.66797" stroke="white" strokeWidth="1.33333" strokeLinecap="round" />
-              <path d="M8 10V2" stroke="white" strokeWidth="1.33333" strokeLinecap="round" />
-            </svg>
+            <DownloadIcon />
           </button>
 
           <button onClick={handleClose} className="w-6 h-6 cursor-pointer flex items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" className="w-full h-full shrink-0">
-              <path d="M12 4L4 12" stroke="white" strokeWidth="1.33333" strokeLinecap="round" />
-              <path d="M4 4L12 12" stroke="white" strokeWidth="1.33333" strokeLinecap="round" />
-            </svg>
+            <ImageCloseIcon />
           </button>
         </div>
 

@@ -170,4 +170,19 @@ const RejectIcon = () => (
   </svg>
 );
 
-export { ChevronDownIcon, SearchIcon, ClearIcon, EmailIcon, BackIcon, CloseIconDesktop, CloseIconMobile, ReviewsIcon, UserIcon, LogoutIcon, HamburgerIcon, DropdownIcon, HostelIcon, DateIcon, BookingOrderIcon, OTAIcon, PhoneIcon, CardEmailIcon, AcceptIcon, RejectIcon };
+const DownloadIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" className="w-full h-full shrink-0">
+    <path d="M14 10V12.6667C14 13.0203 13.8595 13.3594 13.6095 13.6095C13.3594 13.8595 13.0203 14 12.6667 14H3.33333C2.97971 14 2.64057 13.8595 2.39052 13.6095C2.14048 13.3594 2 13.0203 2 12.6667V10" stroke="white" strokeWidth="1.33333" strokeLinecap="round" />
+    <path d="M4.66797 6.66797L8.0013 10.0013L11.3346 6.66797" stroke="white" strokeWidth="1.33333" strokeLinecap="round" />
+    <path d="M8 10V2" stroke="white" strokeWidth="1.33333" strokeLinecap="round" />
+  </svg>
+);
+
+const ImageCloseIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" className="w-full h-full shrink-0">
+    <path d="M12 4L4 12" stroke="white" strokeWidth="1.33333" strokeLinecap="round" />
+    <path d="M4 4L12 12" stroke="white" strokeWidth="1.33333" strokeLinecap="round" />
+  </svg>
+);
+
+export { ChevronDownIcon, SearchIcon, ClearIcon, EmailIcon, BackIcon, CloseIconDesktop, CloseIconMobile, ReviewsIcon, UserIcon, LogoutIcon, HamburgerIcon, DropdownIcon, HostelIcon, DateIcon, BookingOrderIcon, OTAIcon, PhoneIcon, CardEmailIcon, AcceptIcon, RejectIcon, DownloadIcon, ImageCloseIcon };

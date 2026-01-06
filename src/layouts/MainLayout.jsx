@@ -19,15 +19,6 @@ const MainLayout = () => {
     { name: 'Incentivise Reviews', href: '/', icon: <ReviewsIcon /> },
   ];
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  // Not logged in thenredirect to login
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
-
   useEffect(() => {
     if (!user) {
       navigate('/login', { replace: true });
@@ -51,6 +42,15 @@ const MainLayout = () => {
     logout();
     navigate("/login", { replace: true });
   };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  // Not logged in then redirect to login
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
 
   if (!user) return null;
 

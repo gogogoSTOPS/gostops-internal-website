@@ -1,12 +1,24 @@
 import { useState } from 'react';
 import EmailView from '../components/EmailView';
 import OTPView from '../components/OTPView';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Navigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const LoginPage = () => {
+  const navigate = useNavigate();
+  const { isAuthenticated, isLoading, login, logout } = useAuth();
+
   const [mode, setMode] = useState("email"); // "email" | "otp"
   const [email, setEmail] = useState("");
-  const navigate = useNavigate();
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  // logged in then redirect to "/"
+  if (isAuthenticated) {
+    return <Navigate to="/" replace />;
+  }
 
   const handleSubmitEmail = () => {
     console.log("Email submitted:", email);
@@ -15,7 +27,13 @@ const LoginPage = () => {
 
   const handleVerify = () => {
     console.log("Verified successfully");
-    navigate("/");
+    const userData = {
+      name: "",
+      email: email,
+    };
+
+    login(userData);
+    navigate("/", { replace: true });
   };
 
   return (

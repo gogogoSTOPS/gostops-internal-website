@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { DropdownIcon, CloseIcon } from "../icons/svgIcons";
 
-const Popup = ({ mode, setShowPopup, claimId }) => {
+const Popup = ({ mode, setShowPopup, claimId, setShowToast, setToastMessage }) => {
   const rejectOptions = [
     "We are unable to see the review on the associated platform.",
     "Booking details do not match the submitted review.",
@@ -28,6 +28,10 @@ const Popup = ({ mode, setShowPopup, claimId }) => {
       console.log("Accepting Claim:", payload);
 
       // POST API...
+      setShowToast(true);
+      setToastMessage(`Claim ${claimId} has been accepted`);
+
+      setShowToast(true);
     } else {
       const payload = {
         claimId: claimId,
@@ -38,6 +42,8 @@ const Popup = ({ mode, setShowPopup, claimId }) => {
       console.log("Rejecting Claim:", payload);
 
       // POST API...
+      setShowToast(true);
+      setToastMessage(`Claim ${claimId} has been rejected`);
     }
 
     // Close popup after action

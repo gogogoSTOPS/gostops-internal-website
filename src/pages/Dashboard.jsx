@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Filters from "../components/Filters";
 import ReviewCard from "../components/ReviewCard";
+import Toast from "../components/Toast";
 
 const Dashboard = () => {
   const stats = [
@@ -14,6 +15,8 @@ const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [filteredData, setFilteredData] = useState([]);
   const [filters, setFilters] = useState({ claimStatus: 'pending' });
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
 
   // Load Data
   useEffect(() => {
@@ -265,10 +268,18 @@ const Dashboard = () => {
       ) : (
         <div className="flex flex-col gap-4">
           {filteredData.map((item) => (
-            <ReviewCard key={item.id} item={item} />
+            <ReviewCard key={item.id} item={item} setShowToast={setShowToast} setToastMessage={setToastMessage} />
           ))}
         </div>
       )}
+
+      {/* Toast */}
+      <Toast
+        showToast={showToast}
+        setShowToast={setShowToast}
+        toastMessage={toastMessage}
+      />
+
     </div>
   );
 };

@@ -6,7 +6,8 @@ const Popup = ({ mode, setShowPopup, claimId }) => {
     "We are unable to see the review on the associated platform.",
     "Booking details do not match the submitted review.",
     "This review has already been submitted earlier.",
-    "The review is invalid or incomplete."
+    "The review is invalid or incomplete.",
+    "Others",
   ];
 
   const [openDropdown, setOpenDropdown] = useState(false);
@@ -137,6 +138,8 @@ const Popup = ({ mode, setShowPopup, claimId }) => {
                       z-50
                       py-1
                       flex flex-col gap-[2px]
+                      max-h-[11rem]
+                      overflow-y-auto
                     "
                   >
                     {rejectOptions.map((option, index) => (
@@ -167,6 +170,34 @@ const Popup = ({ mode, setShowPopup, claimId }) => {
               </div>
             </div>
           )}
+
+          {/* Other Custom Reject area */}
+          {rejectReason == "Others" && <div className="flex flex-col gap-2">
+            <label
+              htmlFor="reason"
+              className="text-[#0A0A0A] text-[0.875rem] leading-[0.875rem] font-medium"
+            >
+              Custom Reason *
+            </label>
+            <textarea
+              id="reason"
+              rows="3"
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              placeholder={"Please specify the reason..."}
+              className="
+                w-full px-3 py-2
+                rounded-[8px]
+                border border-transparent
+                bg-[#F3F3F5]
+                text-[#0A0A0A] text-[0.875rem] leading-[1.25rem] font-normal
+                resize-none
+                focus:outline-none
+                focus:ring-0
+                focus:shadow-[0_0_0_2.902px_rgba(161,161,161,0.48)]
+              "
+            />
+          </div>}
 
           {/* Text area */}
           <div className="flex flex-col gap-2">

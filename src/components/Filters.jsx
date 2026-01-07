@@ -154,7 +154,7 @@ const Filters = ({ filters, setFilters }) => {
 
                 {/* Dropdown Menu */}
                 {openDropdown === filter.id && (
-                  <div className="absolute top-[calc(100%+4px)] left-0 w-full bg-white rounded-[0.5rem] border border-[rgba(0,0,0,0.1)] shadow-lg z-50 overflow-hidden py-1 flex flex-col gap-[2px]">
+                  <div className="absolute top-[calc(100%+4px)] left-0 w-full bg-white rounded-[0.5rem] border border-[rgba(0,0,0,0.1)] shadow-lg z-50 overflow-hidden py-1 flex flex-col gap-[2px] max-h-[11rem] overflow-y-auto">
                     {filter.options.map((option) => (
                       <div
                         key={option.value}

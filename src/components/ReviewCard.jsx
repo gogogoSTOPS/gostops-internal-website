@@ -140,7 +140,7 @@ const ReviewCard = ({ item, setShowToast, setToastMessage }) => {
               </span>
             </div>
 
-            {item.status == "accepted" &&
+            {item.status == "accepted" && item?.acceptanceComment &&
               <div className="flex w-full p-2 bg-[#F0FDF4] rounded-[0.5rem] border-[0.823px] md:border border-[#B9F8CF]">
                 <span className="text-[#0D542B] text-[0.75rem] leading-[1rem] font-normal">
                   Note: {item?.acceptanceComment || "Accepted without comments."}

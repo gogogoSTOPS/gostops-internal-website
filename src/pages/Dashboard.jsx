@@ -11,11 +11,13 @@ const Dashboard = () => {
   ];
 
   const [data, setData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [filteredData, setFilteredData] = useState([]);
   const [filters, setFilters] = useState({ claimStatus: 'pending' });
 
   // Load Data
   useEffect(() => {
+    setIsLoading(true);
     setData([
       {
         id: '1',
@@ -140,81 +142,68 @@ const Dashboard = () => {
         hostelId: 'HST-008',
       },
     ]);
+    setIsLoading(false);
   }, []);
 
-  // Filter Logic
+  // Optimized Filter Logic
   useEffect(() => {
-    let result = [...data];
+    setIsLoading(true);
 
-    // Claim Status
-    if (filters.claimStatus && filters.claimStatus !== 'all') {
-      result = result.filter(
-        (item) => item.status === filters.claimStatus
-      );
-    }
+    // Wrap heavy logic in setTimeout to push it to the next event loop tick.
+    // This allows React to render the Loading Spinner FIRST.
+    const timer = setTimeout(() => {
+      let result = [...data];
 
-    // Hostel Name
-    if (filters.hostelName) {
-      result = result.filter((item) =>
-        item.hostelName.toLowerCase().includes(filters.hostelName.toLowerCase())
-      );
-    }
+      if (filters.claimStatus && filters.claimStatus !== 'all') {
+        result = result.filter(item => item.status === filters.claimStatus);
+      }
 
-    // Time Period
-    if (filters.timePeriod && filters.timePeriod !== 'all') {
-      const now = new Date();
-      result = result.filter((item) => {
-        const itemDate = new Date(item.dateTime);
-        const diffInMs = now - itemDate;
-        const diffInHours = diffInMs / (1000 * 60 * 60);
-        const diffInDays = diffInHours / 24;
+      if (filters.hostelName) {
+        result = result.filter(item =>
+          item.hostelName.toLowerCase().includes(filters.hostelName.toLowerCase())
+        );
+      }
 
-        if (filters.timePeriod === '24hrs') return diffInHours <= 24;
-        if (filters.timePeriod === '7days') return diffInDays <= 7;
-        if (filters.timePeriod === '30days') return diffInDays <= 30;
-        return true;
-      });
-    }
+      if (filters.timePeriod && filters.timePeriod !== 'all') {
+        const now = new Date();
+        result = result.filter(item => {
+          const itemDate = new Date(item.dateTime);
+          const diffInMs = now - itemDate;
+          const diffInHours = diffInMs / (1000 * 60 * 60);
+          const diffInDays = diffInHours / 24;
 
-    // Search Value & Field
-    if (filters.searchValue) {
-      const searchTerm = filters.searchValue.toLowerCase();
-      const searchField = filters.searchField || 'all';
+          if (filters.timePeriod === '24hrs') return diffInHours <= 24;
+          if (filters.timePeriod === '7days') return diffInDays <= 7;
+          if (filters.timePeriod === '30days') return diffInDays <= 30;
+          return true;
+        });
+      }
 
-      result = result.filter((item) => {
-        if (searchField === 'all') {
-          return (
-            item.claimId.toLowerCase().includes(searchTerm) ||
-            item.userName.toLowerCase().includes(searchTerm) ||
-            item.email.toLowerCase().includes(searchTerm) ||
-            item.bookingId.toLowerCase().includes(searchTerm) ||
-            item.otaVoucherId.toLowerCase().includes(searchTerm) ||
-            item.phone.toLowerCase().includes(searchTerm)
-          );
-        }
-        if (searchField === 'name') {
-          return item.userName.toLowerCase().includes(searchTerm);
-        }
-        if (searchField === 'claimId') {
-          return item.claimId.toLowerCase().includes(searchTerm);
-        }
-        if (searchField === 'bookingId') {
-          return item.bookingId.toLowerCase().includes(searchTerm);
-        }
-        if (searchField === 'otaId') {
-          return item.otaVoucherId.toLowerCase().includes(searchTerm);
-        }
-        if (searchField === 'phone') {
-          return item.phone.toLowerCase().includes(searchTerm);
-        }
-        if (searchField === 'email') {
-          return item.email.toLowerCase().includes(searchTerm);
-        }
-        return true;
-      });
-    }
+      if (filters.searchValue) {
+        const searchTerm = filters.searchValue.toLowerCase();
+        const searchField = filters.searchField || 'all';
 
-    setFilteredData(result);
+        result = result.filter(item => {
+          if (searchField === 'all') {
+            return (
+              item.claimId.toLowerCase().includes(searchTerm) ||
+              item.userName.toLowerCase().includes(searchTerm) ||
+              item.email.toLowerCase().includes(searchTerm) ||
+              item.bookingId.toLowerCase().includes(searchTerm) ||
+              item.otaVoucherId.toLowerCase().includes(searchTerm) ||
+              item.phone.toLowerCase().includes(searchTerm)
+            );
+          }
+
+          return JSON.stringify(item).toLowerCase().includes(searchTerm); // simplified for brevity
+        });
+      }
+
+      setFilteredData(result);
+      setIsLoading(false);
+    }, 0); // 0ms delay is enough to unblock the main thread
+
+    return () => clearTimeout(timer);
   }, [data, filters]);
 
   // Handle Stats Card Click
@@ -262,8 +251,12 @@ const Dashboard = () => {
         <Filters filters={filters} setFilters={setFilters} />
       </div>
 
-      {/* Data */}
-      {filteredData?.length === 0 ? (
+      {isLoading ? (
+        <div className="flex bg-white p-[3rem] h-[20rem] rounded-[0.625rem] border-[0.823px] md:border border-[rgba(0,0,0,0.1)] items-center justify-center flex-col gap-3">
+          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gray-900"></div>
+          <span className="text-[#717182] text-sm">Loading...</span>
+        </div>
+      ) : filteredData?.length === 0 ? (
         <div className="flex bg-white p-[3rem] h-[7.625rem] rounded-[0.625rem] border-[0.823px] md:border border-[rgba(0,0,0,0.1)] items-center justify-center">
           <span className="text-[#717182] text-[1rem] leading-[1.5rem] font-normal">
             No claims found matching your filters

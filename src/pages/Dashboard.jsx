@@ -12,7 +12,7 @@ const Dashboard = () => {
 
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
-  const [filters, setFilters] = useState({ claimStatus: 'all' });
+  const [filters, setFilters] = useState({ claimStatus: 'pending' });
 
   // Load Data
   useEffect(() => {

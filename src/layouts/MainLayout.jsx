@@ -7,25 +7,20 @@ import { useAuth } from '../context/AuthContext';
 const MainLayout = () => {
   const navigate = useNavigate();
   const { isAuthenticated, isLoading, logout, user } = useAuth();
-
   const [userData, setUserData] = useState(user);
-
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [isDesktopSidebarCollapsed, setIsDesktopSidebarCollapsed] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const profileRef = useRef(null);
 
-  const navigation = [
+  const menuItems = [
     { name: 'Incentivise Reviews', href: '/', icon: <ReviewsIcon /> },
   ];
 
   useEffect(() => {
-    if (!userData) {
-      navigate('/login', { replace: true });
-    }
+    if (!userData) navigate('/login', { replace: true });
   }, [userData, navigate]);
 
-  // Click Outside to Close Profile Dropdown
   useEffect(() => {
     function handleClickOutside(event) {
       if (profileRef.current && !profileRef.current.contains(event.target)) {
@@ -33,9 +28,7 @@ const MainLayout = () => {
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [profileRef]);
 
   const handleLogout = () => {
@@ -43,39 +36,35 @@ const MainLayout = () => {
     navigate("/login", { replace: true });
   };
 
-  if (isLoading) {
+  if (isLoading)
     return <div>Loading...</div>;
-  }
-
-  // Not logged in then redirect to login
-  if (!isAuthenticated) {
+  if (!isAuthenticated)
     return <Navigate to="/login" replace />;
-  }
-
-  if (!userData) return null;
+  if (!userData)
+    return null;
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
-      {/* Sidebar */}
+    <div className="h-screen bg-gray-50 flex overflow-hidden">
       <Sidebar
         isOpen={isMobileSidebarOpen}
         onClose={() => setIsMobileSidebarOpen(false)}
         isCollapsed={isDesktopSidebarCollapsed}
         toggleCollapse={() => setIsDesktopSidebarCollapsed(!isDesktopSidebarCollapsed)}
-        navigation={navigation}
+        menuItems={menuItems}
         handleLogout={handleLogout}
+        userData={userData}
       />
 
       {/* Content Area */}
       <div
-        className={`flex-1 flex flex-col min-h-screen transition-all duration-300
+        className={`flex-1 flex flex-col h-full transition-all duration-300
           ${isDesktopSidebarCollapsed ? 'md:ml-[4rem]' : 'md:ml-[17.5rem]'}
           ml-0
         `}
       >
         {/* Header */}
-        <header className="flex shrink-0 items-center justify-between border-b border-[rgba(0,0,0,0.10)] bg-white
-          h-[4.5rem] px-4 w-full
+        <header className="flex shrink-0 items-center justify-between border-b border-black md:border-[rgba(0,0,0,0.10)] bg-white
+          h-[4.5rem] px-4 w-full z-50 relative
           md:h-[5.5rem] md:px-6
         ">
 
@@ -119,20 +108,16 @@ const MainLayout = () => {
               </div>
             </button>
 
-            {/* Dropdown Modal */}
             {isProfileOpen && (
               <div className="absolute right-0 top-[2rem] mt-2 z-50 flex flex-col items-start rounded-[0.625rem] border border-[#E5E7EB] bg-white shadow-[0_10px_15px_-3px_rgba(0,0,0,0.10),0_4px_6px_-4px_rgba(0,0,0,0.10)] w-[16rem] h-[7.5rem] pt-[0.5rem] px-[1px] pb-[1px]">
-                {/* Name, Email Section */}
                 <div className="flex flex-col items-start self-stretch px-4 pt-3 pb-[1px] border-b border-[#F3F4F6] mb-1">
                   <p className="text-[#101828] text-[1rem] font-medium leading-6 tracking-[-0.312px]">
-                    User
+                    {userData?.name || "Test"}
                   </p>
                   <p className="text-[#6A7282] text-[0.875rem] font-normal leading-5 tracking-[-0.15px] mb-2">
-                    userData@gostops.com
+                    {userData?.email}
                   </p>
                 </div>
-
-                {/* Logout Button */}
                 <button
                   onClick={handleLogout}
                   className="flex px-4 py-2 items-center gap-2 self-stretch hover:bg-gray-50 transition-colors cursor-pointer"
@@ -150,7 +135,7 @@ const MainLayout = () => {
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 overflow-auto">
+        <main className="flex-1 overflow-y-auto">
           <Outlet />
         </main>
       </div>

@@ -66,9 +66,14 @@ const Filters = ({ filters, setFilters }) => {
   const dropdownRef = useRef(null);
 
   useEffect(() => {
-    setFilters(
-      FILTER_CONFIG.reduce((acc, curr) => ({ ...acc, [curr.id]: "" }), {})
-    );
+    setFilters(() => {
+      const baseFilters = FILTER_CONFIG.reduce(
+        (acc, curr) => ({ ...acc, [curr.id]: "" }),
+        {}
+      );
+
+      return { ...baseFilters, claimStatus: 'pending' };
+    });
   }, []);
 
   // Close dropdowns if clicking outside

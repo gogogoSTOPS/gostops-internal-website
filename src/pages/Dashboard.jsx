@@ -20,7 +20,7 @@ const Dashboard = () => {
       {
         id: '1',
         claimId: 'CLM-2024-001',
-        photo: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=400&h=300&fit=crop',
+        photo: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=1200&h=1600&fit=crop',
         userName: 'Sarah Johnson',
         hostelName: 'Sunset Backpackers',
         bookingId: 'BK-45321',
@@ -35,7 +35,7 @@ const Dashboard = () => {
       {
         id: '2',
         claimId: 'CLM-2024-002',
-        photo: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=300&fit=crop',
+        photo: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3',
         userName: 'Michael Chen',
         hostelName: 'Downtown Hostel',
         bookingId: 'BK-45322',
@@ -50,7 +50,7 @@ const Dashboard = () => {
       {
         id: '3',
         claimId: 'CLM-2024-003',
-        photo: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=400&h=300&fit=crop',
+        photo: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0',
         userName: 'Emma Williams',
         hostelName: 'Beach House Hostel',
         bookingId: 'BK-45323',
@@ -66,7 +66,7 @@ const Dashboard = () => {
       {
         id: '4',
         claimId: 'CLM-2024-004',
-        photo: 'https://images.unsplash.com/photo-1553877522-43269d4ea984?w=400&h=300&fit=crop',
+        photo: 'https://images.unsplash.com/photo-1553877522-43269d4ea984',
         userName: 'James Brown',
         hostelName: 'City Center Hostel',
         bookingId: 'BK-45324',
@@ -82,7 +82,7 @@ const Dashboard = () => {
       {
         id: '5',
         claimId: 'CLM-2024-005',
-        photo: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=300&fit=crop',
+        photo: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f',
         userName: 'Olivia Martinez',
         hostelName: 'Mountain View Lodge',
         bookingId: 'BK-45325',
@@ -97,7 +97,7 @@ const Dashboard = () => {
       {
         id: '6',
         claimId: 'CLM-2024-006',
-        photo: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=400&h=300&fit=crop',
+        photo: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df',
         userName: 'David Lee',
         hostelName: 'Riverside Backpackers',
         bookingId: 'BK-45326',
@@ -112,7 +112,7 @@ const Dashboard = () => {
       {
         id: '7',
         claimId: 'CLM-2024-007',
-        photo: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=400&h=300&fit=crop',
+        photo: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40',
         userName: 'Robert Taylor',
         hostelName: 'Old Town Hostel',
         bookingId: 'BK-45327',
@@ -127,7 +127,7 @@ const Dashboard = () => {
       {
         id: '8',
         claimId: 'CLM-2024-008',
-        photo: 'https://images.unsplash.com/photo-1551836022-4c4c79ecde51?w=400&h=300&fit=crop',
+        photo: 'https://images.unsplash.com/photo-1551836022-4c4c79ecde51',
         userName: 'Lisa Anderson',
         hostelName: 'Garden Hostel',
         bookingId: 'BK-45328',

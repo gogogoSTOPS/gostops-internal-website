@@ -27,7 +27,7 @@ const Dashboard = () => {
         claimId: 'CLM-2024-001',
         photo: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=400&h=300&fit=crop',
         userName: 'Sarah Johnson',
-        hostelName: 'Sunset Backpackers',
+        hostelName: 'Bengaluru HSR',
         bookingId: 'BK-45321',
         otaVoucherId: 'OTA-9876',
         phone: '+1-555-0123',
@@ -42,7 +42,7 @@ const Dashboard = () => {
         claimId: 'CLM-2024-002',
         photo: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=300&fit=crop',
         userName: 'Michael Chen',
-        hostelName: 'Downtown Hostel',
+        hostelName: 'Bengaluru Majestic',
         bookingId: 'BK-45322',
         otaVoucherId: 'OTA-9877',
         phone: '+1-555-0124',
@@ -57,7 +57,7 @@ const Dashboard = () => {
         claimId: 'CLM-2024-003',
         photo: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=400&h=300&fit=crop',
         userName: 'Emma Williams',
-        hostelName: 'Beach House Hostel',
+        hostelName: 'Bengaluru Jayanagar',
         bookingId: 'BK-45323',
         otaVoucherId: 'OTA-9878',
         phone: '+1-555-0125',
@@ -73,7 +73,7 @@ const Dashboard = () => {
         claimId: 'CLM-2024-004',
         photo: 'https://images.unsplash.com/photo-1553877522-43269d4ea984?w=400&h=300&fit=crop',
         userName: 'James Brown',
-        hostelName: 'City Center Hostel',
+        hostelName: 'Goa',
         bookingId: 'BK-45324',
         otaVoucherId: 'OTA-9879',
         phone: '+1-555-0126',
@@ -89,7 +89,7 @@ const Dashboard = () => {
         claimId: 'CLM-2024-005',
         photo: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=300&fit=crop',
         userName: 'Olivia Martinez',
-        hostelName: 'Mountain View Lodge',
+        hostelName: 'Kasol',
         bookingId: 'BK-45325',
         otaVoucherId: 'OTA-9880',
         phone: '+1-555-0127',
@@ -104,7 +104,7 @@ const Dashboard = () => {
         claimId: 'CLM-2024-006',
         photo: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=400&h=300&fit=crop',
         userName: 'David Lee',
-        hostelName: 'Riverside Backpackers',
+        hostelName: 'Jaipur',
         bookingId: 'BK-45326',
         otaVoucherId: 'OTA-9881',
         phone: '+1-555-0128',
@@ -186,7 +186,7 @@ const Dashboard = () => {
         const searchTerm = filters.searchValue.toLowerCase();
         const searchField = filters.searchField || 'all';
 
-        result = result.filter(item => {
+        result = result.filter((item) => {
           if (searchField === 'all') {
             return (
               item.claimId.toLowerCase().includes(searchTerm) ||
@@ -197,8 +197,25 @@ const Dashboard = () => {
               item.phone.toLowerCase().includes(searchTerm)
             );
           }
-
-          return JSON.stringify(item).toLowerCase().includes(searchTerm); // simplified for brevity
+          if (searchField === 'name') {
+            return item.userName.toLowerCase().includes(searchTerm);
+          }
+          if (searchField === 'claimId') {
+            return item.claimId.toLowerCase().includes(searchTerm);
+          }
+          if (searchField === 'bookingId') {
+            return item.bookingId.toLowerCase().includes(searchTerm);
+          }
+          if (searchField === 'otaId') {
+            return item.otaVoucherId.toLowerCase().includes(searchTerm);
+          }
+          if (searchField === 'phone') {
+            return item.phone.toLowerCase().includes(searchTerm);
+          }
+          if (searchField === 'email') {
+            return item.email.toLowerCase().includes(searchTerm);
+          }
+          return true;
         });
       }
 

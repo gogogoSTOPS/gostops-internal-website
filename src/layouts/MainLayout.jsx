@@ -109,7 +109,8 @@ const MainLayout = () => {
             </button>
 
             {isProfileOpen && (
-              <div className="absolute right-0 top-[2rem] mt-2 z-50 flex flex-col items-start rounded-[0.625rem] border border-[#E5E7EB] bg-white shadow-[0_10px_15px_-3px_rgba(0,0,0,0.10),0_4px_6px_-4px_rgba(0,0,0,0.10)] w-[16rem] h-[7.5rem] pt-[0.5rem] px-[1px] pb-[1px]">
+              <div className="absolute right-0 top-[2rem] mt-2 z-50 flex flex-col items-start rounded-[0.625rem] border border-[#E5E7EB] bg-white shadow-[0_10px_15px_-3px_rgba(0,0,0,0.10),0_4px_6px_-4px_rgba(0,0,0,0.10)] w-[16rem] h-[8.5rem] pt-[0.5rem] px-[1px] pb-[1px]">
+                {/* Name & EMail */}
                 <div className="flex flex-col items-start self-stretch px-4 pt-3 pb-[1px] border-b border-[#F3F4F6] mb-1">
                   <p className="text-[#101828] text-[1rem] font-medium leading-6 tracking-[-0.312px]">
                     {userData?.name || "Test"}
@@ -118,6 +119,7 @@ const MainLayout = () => {
                     {userData?.email}
                   </p>
                 </div>
+                {/* Logout Button */}
                 <button
                   onClick={handleLogout}
                   className="flex px-4 py-2 items-center gap-2 self-stretch hover:bg-gray-50 transition-colors cursor-pointer"

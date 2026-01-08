@@ -81,7 +81,7 @@ export const AuthProvider = ({ children }) => {
   );
 
   /**
-   * 8️Provide context
+   * Provide context
    */
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

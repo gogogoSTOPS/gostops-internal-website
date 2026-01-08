@@ -67,7 +67,7 @@ const Sidebar = ({ isOpen, onClose, isCollapsed, toggleCollapse, menuItems, hand
         {/* SCROLLABLE AREA: This container takes remaining height */}
         <div className="flex-1 overflow-y-auto no-scrollbar py-3">
           <div className={`flex flex-col gap-[0.75rem]
-            ${isCollapsed ? 'px-2 items-center' : 'px-4'}
+            ${isCollapsed ? 'px-3 items-center' : 'px-4'}
           `}>
             {menuItems.map((item) => {
               const active = isActive(item.href);
@@ -103,7 +103,7 @@ const Sidebar = ({ isOpen, onClose, isCollapsed, toggleCollapse, menuItems, hand
         </div>
 
         {/* Mobile Profile - Fixed at bottom of sidebar */}
-        <div className="md:hidden mt-auto border-t border-[rgba(0,0,0,0.05)] bg-white flex w-full flex-col items-start gap-3 p-4">
+        <div className="md:hidden mt-auto border-t border-[#E5E7EB] bg-white flex w-full flex-col items-start gap-3 p-4">
           <div className="flex h-11 items-center gap-[0.5rem] shrink-0 self-stretch">
             <div className="flex w-8 h-8 justify-center items-center shrink-0 rounded-full bg-[#030213]">
               <UserIcon />

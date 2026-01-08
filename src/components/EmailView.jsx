@@ -43,12 +43,12 @@ const EmailView = ({ email, setEmail, onSubmit }) => {
           <div
             className={`flex h-9 w-full items-center gap-2 rounded-lg px-3 border
               ${email
-                ? "bg-[rgba(70,90,126,0.40)] border-[rgba(0,0,0,0)] shadow-[0_0_0_2.903px_rgba(161,161,161,0.48)]"
+                ? "bg-[#F3F3F5] border-[rgba(0,0,0,0)] shadow-[0_0_0_2.903px_rgba(161,161,161,0.48)]"
                 : "bg-[#F3F3F5] border-transparent"
               }
-          focus-within:bg-[rgba(70,90,126,0.40)]
-            focus-within:border-[rgba(0,0,0,0)]
-            focus-within:shadow-[0_0_0_2.903px_rgba(161,161,161,0.48)]`}
+              focus-within:border-[rgba(0,0,0,0)]
+              focus-within:shadow-[0_0_0_2.903px_rgba(161,161,161,0.48)]
+            `}
           >
             <div className="flex h-4 w-4 items-center justify-center shrink-0">
               <EmailIcon />
@@ -58,7 +58,7 @@ const EmailView = ({ email, setEmail, onSubmit }) => {
               value={email}
               onChange={handleChange}
               placeholder="you@example.com"
-              className="w-full bg-transparent text-[#717182] text-sm font-normal leading-normal tracking-[-0.15px] outline-none placeholder:text-[#717182]"
+              className="w-full bg-transparent text-gray-700 text-sm font-semibold leading-normal tracking-[-0.15px] outline-none placeholder:text-[#717182]"
             />
           </div>
         </div>

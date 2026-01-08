@@ -1,0 +1,56 @@
+[
+    {
+        "parent_city": "Alibaug",
+        "url": "https://qa.gostops.com/stay/alibaug/itinerary/murudjanjirafortalibaug",
+        "itinerary_name": "Murud-Janjira Fort",
+        "real_coords": null,
+        "map_coords": null,
+        "distance_km": null,
+        "status": "Checked"
+    },
+    {
+        "parent_city": "Alibaug",
+        "url": "https://qa.gostops.com/stay/alibaug/itinerary/kolabafort",
+        "itinerary_name": "Kolaba Fort, Alibaug",
+        "real_coords": null,
+        "map_coords": null,
+        "distance_km": null,
+        "status": "Checked"
+    },
+    {
+        "parent_city": "Alibaug",
+        "url": "https://qa.gostops.com/stay/alibaug/itinerary/alibagbeachalibaug",
+        "itinerary_name": "Alibag Beach, Alibaug",
+        "real_coords": null,
+        "map_coords": null,
+        "distance_km": null,
+        "status": "Checked"
+    },
+    {
+        "parent_city": "Alibaug",
+        "url": "https://qa.gostops.com/stay/alibaug/itinerary/shreerameshwarmandirchaul",
+        "itinerary_name": "Shree Rameshwar Mandir, Chaul",
+        "real_coords": null,
+        "map_coords": null,
+        "distance_km": null,
+        "status": "Checked"
+    },
+    {
+        "parent_city": "Alibaug",
+        "url": "https://qa.gostops.com/stay/alibaug/itinerary/maldarcatamaransalibaug",
+        "itinerary_name": "Maldar Catamarans",
+        "real_coords": null,
+        "map_coords": null,
+        "distance_km": null,
+        "status": "Checked"
+    },
+    {
+        "parent_city": "Alibaug",
+        "url": "https://qa.gostops.com/stay/alibaug/itinerary/burgersandboochalibaug",
+        "itinerary_name": "Burgers & Booch",
+        "real_coords": null,
+        "map_coords": null,
+        "distance_km": null,
+        "status": "Checked"
+    }
+]

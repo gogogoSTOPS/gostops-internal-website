@@ -1,9 +1,7 @@
 import { useState } from "react";
 import { EmailIcon } from "../icons/svgIcons";
 
-const EmailView = ({ email, setEmail, onSubmit }) => {
-  const [error, setError] = useState("");
-
+const EmailView = ({ email, setEmail, onSubmit, error, setError }) => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   const handleSubmit = () => {

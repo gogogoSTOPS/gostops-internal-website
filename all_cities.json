@@ -1,0 +1,14 @@
+[
+    {
+        "city": "Alibaug",
+        "url": "https://qa.gostops.com/stay/alibaug",
+        "status": "Checked",
+        "real_coords": [
+            18.6498427,
+            72.8765469
+        ],
+        "map_coords": null,
+        "distance_km": null,
+        "error": "Coordinates could not be determined"
+    }
+]

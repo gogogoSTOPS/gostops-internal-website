@@ -1,11 +1,9 @@
 import { useRef, useState, useEffect } from "react";
 import { BackIcon } from "../icons/svgIcons";
 
-const OTPView = ({ email, onBack, onVerify }) => {
+const OTPView = ({ email, onBack, error, setError, success, setSuccess, handleVerify, handleResend }) => {
   const OTP_LENGTH = 6;
   const [otp, setOtp] = useState(Array(OTP_LENGTH).fill(""));
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
   const inputRefs = useRef([]);
 
   const handleChange = (e, index) => {
@@ -35,32 +33,19 @@ const OTPView = ({ email, onBack, onVerify }) => {
     }
   };
 
-  const verifyOTP = async (otp) => {
-    return true;
-  }
-
-  const handleVerify = async () => {
-    const isValid = await verifyOTP(otp.join(""));
-
-    if (!isValid) {
-      setError("Incorrect OTP");
-    }
-
-    onVerify();
-  };
-
-  const handleResend = () => {
-    setError("");
-    setSuccess("OTP sent successfully");
-
-    setTimeout(() => {
-      setSuccess("");
-    }, 2000);
-  };
-
   useEffect(() => {
     inputRefs.current[0]?.focus();
   }, []);
+
+  useEffect(() => {
+    if (!success) return;
+
+    const timer = setTimeout(() => {
+      setSuccess(false);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [success, setSuccess]);
 
   return (
     <>
@@ -69,7 +54,11 @@ const OTPView = ({ email, onBack, onVerify }) => {
         {/* Back + Title */}
         <div className="flex h-9 items-center justify-center gap-2">
           <div
-            onClick={onBack}
+            onClick={() => {
+              setError("");
+              setSuccess("");
+              onBack();
+            }}
             className="flex h-9 w-9 items-center justify-center cursor-pointer hover:bg-gray-100 rounded-full transition-colors"
           >
             <div className="h-4 w-4 shrink-0">
@@ -113,7 +102,9 @@ const OTPView = ({ email, onBack, onVerify }) => {
         {/* Buttons */}
         <div className="flex flex-col items-start gap-2 self-stretch">
           <button
-            onClick={handleVerify}
+            onClick={() => {
+              handleVerify(otp);
+            }}
             className="flex w-full items-center justify-center rounded-lg bg-[#030213] pt-[0.53rem] pb-[0.47rem] self-stretch cursor-pointer"
           >
             <span className="text-white text-center text-sm font-medium leading-5 tracking-[-0.15px]">

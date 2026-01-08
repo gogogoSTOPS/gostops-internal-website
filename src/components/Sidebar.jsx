@@ -7,6 +7,10 @@ const Sidebar = ({ isOpen, onClose, isCollapsed, toggleCollapse, menuItems, hand
 
   // Body Scroll Lock Logic
   useEffect(() => {
+    if (isOpen && isCollapsed) {
+      toggleCollapse();
+    }
+
     if (isOpen) {
       document.body.style.overflow = 'hidden';
     } else {

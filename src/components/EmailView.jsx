@@ -37,15 +37,16 @@ const EmailView = ({ email, setEmail, onSubmit }) => {
       <div className="flex w-full max-w-[24.875rem] flex-col items-start gap-4">
         {/* Email Input */}
         <div className="flex flex-col items-start gap-2 self-stretch">
-          <label className="text-[#0A0A0A] text-sm font-medium leading-[14px] tracking-[-0.15px]">
+          <label className="text-[#0A0A0A] text-sm font-medium leading-[0.875rem] tracking-[-0.15px]">
             Email Address
           </label>
           <div
             className={`flex h-9 w-full items-center gap-2 rounded-lg px-3 border
               ${email
-                ? "bg-[#F3F3F5] border-[rgba(0,0,0,0)] shadow-[0_0_0_2.903px_rgba(161,161,161,0.48)]"
+                ? "bg-[rgba(70,90,126,0.40)] border-[rgba(0,0,0,0)] shadow-[0_0_0_2.903px_rgba(161,161,161,0.48)]"
                 : "bg-[#F3F3F5] border-transparent"
               }
+            focus-within:bg-[rgba(70,90,126,0.40)]
               focus-within:border-[rgba(0,0,0,0)]
               focus-within:shadow-[0_0_0_2.903px_rgba(161,161,161,0.48)]
             `}
@@ -58,7 +59,7 @@ const EmailView = ({ email, setEmail, onSubmit }) => {
               value={email}
               onChange={handleChange}
               placeholder="you@example.com"
-              className="w-full bg-transparent text-gray-700 text-sm font-semibold leading-normal tracking-[-0.15px] outline-none placeholder:text-[#717182]"
+              className="w-full bg-transparent text-[#717182] text-sm font-normal leading-normal tracking-[-0.15px] outline-none placeholder:text-[#717182]"
             />
           </div>
         </div>
@@ -74,7 +75,7 @@ const EmailView = ({ email, setEmail, onSubmit }) => {
         </button>
 
         {error && (
-          <span className="text-red-500 text-sm font-medium leading-[14px] tracking-[-0.15px]">
+          <span className="text-red-500 text-sm font-medium leading-[0.875rem] tracking-[-0.15px]">
             {error}
           </span>
         )}

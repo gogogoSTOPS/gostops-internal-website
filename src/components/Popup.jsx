@@ -32,6 +32,11 @@ const Popup = ({ mode, setShowPopup, claimId, uuid, setShowToast, setToastMessag
       return;
     }
 
+    if (!user) {
+      setError("User information is missing. Please login again.");
+      return;
+    }
+
     setIsLoading(true);
     setError("");
 
@@ -39,8 +44,16 @@ const Popup = ({ mode, setShowPopup, claimId, uuid, setShowToast, setToastMessag
       let payload;
       let url = `${baseUrl}/api/core/v1/incentive-claim/${uuid}/status/`;
 
+      // Base payload with user details for tracking
+      const basePayload = {
+        employee_id: user.employee_id || null,
+        employee_name: user.full_name || "",
+        employee_email: user.email || "",
+      };
+
       if (mode === "accept") {
         payload = {
+          ...basePayload,
           action: "accept",
         };
         if (comment.trim()) {
@@ -53,6 +66,7 @@ const Popup = ({ mode, setShowPopup, claimId, uuid, setShowToast, setToastMessag
           : rejectReason;
         
         payload = {
+          ...basePayload,
           action: "reject",
           rejection_reason: finalRejectionReason,
           comments: comment.trim() || "",

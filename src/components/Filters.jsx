@@ -6,9 +6,8 @@ const FILTER_CONFIG = [
   {
     id: "hostelName",
     label: "Search by Hostel Name",
-    type: "text",
-    placeholder: "Search hostel...",
-    icon: <SearchIcon />,
+    type: "select",
+    placeholder: "Select hostel...",
   },
   {
     id: "searchField",
@@ -26,53 +25,68 @@ const FILTER_CONFIG = [
     ],
   },
   {
-    id: "claimStatus",
-    label: "Claim Status",
-    type: "select",
-    placeholder: "All Status",
-    options: [
-      { value: "all", label: "All Status" },
-      { value: "pending", label: "Pending" },
-      { value: "accepted", label: "Accepted" },
-      { value: "rejected", label: "Rejected" },
-    ],
-  },
-  {
-    id: "timePeriod",
-    label: "Time Period",
-    type: "select",
-    placeholder: "Last 24 Hours",
-    options: [
-      { value: "24hrs", label: "Last 24 Hours" },
-      { value: "7days", label: "Last 7 Days" },
-      { value: "30days", label: "Last 30 Days" },
-      { value: "all", label: "All Time" },
-    ],
-  },
-  {
     id: "searchValue",
     label: "Search Value",
     type: "text",
     placeholder: "Search by all fields...",
     icon: <SearchIcon />,
   },
+  
+  {
+    id: "timePeriod",
+    label: "Time Period",
+    type: "select",
+    placeholder: "All Time",
+    options: [
+      { value: "all", label: "All Time" },
+      { value: "24hrs", label: "Last 24 Hours" },
+      { value: "7days", label: "Last 7 Days" },
+      { value: "30days", label: "Last 30 Days" },
+    ],
+  },
+  
 ];
 
-const Filters = ({ filters, setFilters }) => {
+const Filters = ({ filters, setFilters, hostels = [] }) => {
   // State to track which dropdown is currently open (by ID)
   const [openDropdown, setOpenDropdown] = useState(null);
 
   // Ref for click-outside detection
   const dropdownRef = useRef(null);
 
+  // Build hostel options from hostels prop
+  const hostelOptions = [
+    { value: "", label: "All Hostels" },
+    ...hostels.map((hostel) => ({
+      value: hostel.slug,
+      label: hostel.name,
+    })),
+  ];
+
   useEffect(() => {
-    setFilters(() => {
+    // Initialize filter fields if they don't exist
+    setFilters((prev) => {
       const baseFilters = FILTER_CONFIG.reduce(
-        (acc, curr) => ({ ...acc, [curr.id]: "" }),
+        (acc, curr) => {
+          // Only set if the field doesn't exist in prev
+          if (!(curr.id in prev)) {
+            acc[curr.id] = "";
+          } else {
+            acc[curr.id] = prev[curr.id];
+          }
+          return acc;
+        },
         {}
       );
-
-      return { ...baseFilters, claimStatus: 'pending' };
+      
+      // Ensure claimStatus defaults to 'pending' if not set
+      if (!prev.claimStatus) {
+        baseFilters.claimStatus = 'pending';
+      } else {
+        baseFilters.claimStatus = prev.claimStatus;
+      }
+      
+      return baseFilters;
     });
   }, []);
 
@@ -143,7 +157,11 @@ const Filters = ({ filters, setFilters }) => {
                   <div className={dropdownTriggerStyle}>
                     <span className="text-[#0A0A0A] font-medium">
                       {/* Show Selected Label or Placeholder */}
-                      {filters[filter.id]
+                      {filter.id === "hostelName" && filters[filter.id]
+                        ? hostelOptions.find(opt => opt.value === filters[filter.id])?.label
+                        : filter.id === "hostelName" && !filters[filter.id]
+                        ? filter.placeholder
+                        : filters[filter.id]
                         ? filter.options.find(opt => opt.value === filters[filter.id])?.label
                         : filter.placeholder
                       }
@@ -155,7 +173,7 @@ const Filters = ({ filters, setFilters }) => {
                 {/* Dropdown Menu */}
                 {openDropdown === filter.id && (
                   <div className="absolute top-[calc(100%+4px)] left-0 w-full bg-white rounded-[0.5rem] border border-[rgba(0,0,0,0.1)] shadow-lg z-50 overflow-hidden py-1 flex flex-col gap-[2px] max-h-[11rem] overflow-y-auto">
-                    {filter.options.map((option) => (
+                    {(filter.id === "hostelName" ? hostelOptions : filter.options).map((option) => (
                       <div
                         key={option.value}
                         onClick={() => handleChange(filter.id, option.value)}

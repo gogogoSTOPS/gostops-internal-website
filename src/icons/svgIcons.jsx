@@ -34,6 +34,13 @@ const EmailIcon = () => (
   </svg>
 );
 
+const PasswordIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+    <path d="M12.6654 7.33203H3.33203C2.59565 7.33203 1.9987 7.92898 1.9987 8.66536V13.332C1.9987 14.0684 2.59565 14.6654 3.33203 14.6654H12.6654C13.4018 14.6654 13.9987 14.0684 13.9987 13.332V8.66536C13.9987 7.92898 13.4018 7.33203 12.6654 7.33203Z" stroke="#717182" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M4.66797 7.33203V4.66536C4.66797 3.78071 5.01916 2.93256 5.64428 2.30744C6.2694 1.68232 7.11755 1.33203 8.0013 1.33203C8.88505 1.33203 9.7332 1.68232 10.3583 2.30744C10.9834 2.93256 11.3346 3.78071 11.3346 4.66536V7.33203" stroke="#717182" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
 const BackIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
     <path d="M7.9987 12.6673L3.33203 8.00065L7.9987 3.33398" stroke="#0A0A0A" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round" />
@@ -191,4 +198,4 @@ const ToastIcon = () => (
   </svg>
 );
 
-export { ChevronDownIcon, SearchIcon, ClearIcon, EmailIcon, BackIcon, CloseIconDesktop, CloseIconMobile, ReviewsIcon, UserIcon, LogoutIcon, HamburgerIcon, DropdownIcon, HostelIcon, DateIcon, BookingOrderIcon, OTAIcon, PhoneIcon, CardEmailIcon, AcceptIcon, RejectIcon, DownloadIcon, CloseIcon, ToastIcon };
+export { ChevronDownIcon, SearchIcon, ClearIcon, EmailIcon, PasswordIcon, BackIcon, CloseIconDesktop, CloseIconMobile, ReviewsIcon, UserIcon, LogoutIcon, HamburgerIcon, DropdownIcon, HostelIcon, DateIcon, BookingOrderIcon, OTAIcon, PhoneIcon, CardEmailIcon, AcceptIcon, RejectIcon, DownloadIcon, CloseIcon, ToastIcon };

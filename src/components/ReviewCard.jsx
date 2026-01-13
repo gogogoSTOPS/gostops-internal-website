@@ -3,7 +3,7 @@ import { HostelIcon, DateIcon, BookingOrderIcon, OTAIcon, PhoneIcon, CardEmailIc
 import ImageViewer from './ImageViewer';
 import Popup from './Popup';
 
-const ReviewCard = ({ item, setShowToast, setToastMessage }) => {
+const ReviewCard = ({ item, setShowToast, setToastMessage, onRefresh }) => {
   const [showImage, setShowImage] = useState(false);
   const [showImageURL, setShowImageURL] = useState("");
   const [showPopup, setShowPopup] = useState(false);
@@ -202,8 +202,10 @@ const ReviewCard = ({ item, setShowToast, setToastMessage }) => {
           mode={popUpMode}
           setShowPopup={setShowPopup}
           claimId={item.claimId}
+          uuid={item.uuid}
           setShowToast={setShowToast}
           setToastMessage={setToastMessage}
+          onSuccess={onRefresh}
         />
       }
     </>

@@ -113,7 +113,7 @@ const Sidebar = ({ isOpen, onClose, isCollapsed, toggleCollapse, menuItems, hand
               <UserIcon />
             </div>
             <div className="flex flex-col items-start overflow-hidden">
-              <p className="text-[#101828] text-[1rem] font-medium leading-6 truncate w-full">{userData?.name || "Test"}</p>
+              <p className="text-[#101828] text-[1rem] font-medium leading-6 truncate w-full">{userData?.full_name || "User"}</p>
               <p className="text-[#6A7282] text-[0.875rem] font-normal leading-5 truncate w-full">{userData?.email}</p>
             </div>
           </div>

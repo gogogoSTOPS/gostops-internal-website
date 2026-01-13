@@ -1,9 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Filters from "../components/Filters";
 import ReviewCard from "../components/ReviewCard";
 import Toast from "../components/Toast";
+import { useAuth } from "../context/AuthContext";
 
 const Dashboard = () => {
+  const { user } = useAuth();
+  const baseUrl = import.meta.env.VITE_GOSTOPS_BE_BASEURL;
+
   const stats = [
     { name: 'Total Claims', textColor: 'text-[#0A0A0A]', filterValue: 'all' },
     { name: 'Pending', textColor: 'text-[#FF9800]', filterValue: 'pending' },
@@ -12,145 +16,136 @@ const Dashboard = () => {
   ];
 
   const [data, setData] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [summary, setSummary] = useState({
+    total_claims: 0,
+    pending: 0,
+    accepted: 0,
+    rejected: 0,
+  });
+  const [isLoadingData, setIsLoadingData] = useState(true); // For API data fetching
+  const [isFiltering, setIsFiltering] = useState(false); // For filter operations
   const [filteredData, setFilteredData] = useState([]);
   const [filters, setFilters] = useState({ claimStatus: 'pending' });
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
+  const [error, setError] = useState("");
 
-  // Load Data
+  // Map API status to dashboard status
+  const mapStatus = (apiStatus) => {
+    switch (apiStatus?.toLowerCase()) {
+      case 'approved':
+        return 'accepted';
+      case 'pending':
+        return 'pending';
+      case 'rejected':
+        return 'rejected';
+      default:
+        return apiStatus?.toLowerCase() || 'pending';
+    }
+  };
+
+  // Transform API claim data to dashboard format
+  const transformClaimData = (claim) => {
+    // Extract short UUID for claimId (first 8 characters)
+    const shortUuid = claim.uuid?.substring(0, 8).toUpperCase() || 'N/A';
+    
+    return {
+      id: claim.uuid,
+      claimId: `CLM-${shortUuid}`,
+      photo: claim.proof_url || '',
+      userName: claim.user_profile?.name || 'N/A',
+      hostelName: claim.hostel?.name || 'N/A',
+      bookingId: `BK-${claim.model_id || 'N/A'}`,
+      otaVoucherId: claim.platform?.toUpperCase() || 'N/A',
+      phone: claim.user_profile?.phone || 'N/A',
+      email: claim.user_profile?.email || 'N/A',
+      checkoutDate: claim.created_at || new Date().toISOString(),
+      dateTime: claim.created_at || new Date().toISOString(),
+      status: mapStatus(claim.status),
+      hostelId: claim.hostel?.id?.toString() || '',
+      rejectionReason: claim.rejection_reason || null,
+      acceptanceComment: claim.comments || null,
+      uuid: claim.uuid,
+    };
+  };
+
+  // Fetch claims function
+  const fetchClaims = useCallback(async () => {
+    if (!user?.token) {
+      setIsLoadingData(false);
+      return;
+    }
+
+    setIsLoadingData(true);
+    setError("");
+
+    try {
+      const response = await fetch(
+        `${baseUrl}/api/core/v1/incentive-claims/`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${user.token}`,
+          },
+        }
+      );
+
+      const result = await response.json();
+      console.log("Claims API response:", result);
+
+      if (response.ok && result.status === "success" && result.data) {
+        // Set summary data
+        if (result.data.summary) {
+          setSummary({
+            total_claims: result.data.summary.total_claims || 0,
+            pending: result.data.summary.pending || 0,
+            accepted: result.data.summary.accepted || 0,
+            rejected: result.data.summary.rejected || 0,
+          });
+        }
+
+        // Transform and set claims data
+        const transformedData = (result.data.claims || []).map(transformClaimData);
+        setData(transformedData);
+      } else {
+        setError(result.message || "Failed to fetch claims");
+        setData([]);
+        setSummary({
+          total_claims: 0,
+          pending: 0,
+          accepted: 0,
+          rejected: 0,
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching claims:", error);
+      setError("Failed to load claims. Please try again.");
+      setData([]);
+      setSummary({
+        total_claims: 0,
+        pending: 0,
+        accepted: 0,
+        rejected: 0,
+      });
+    } finally {
+      setIsLoadingData(false);
+    }
+  }, [user?.token, baseUrl]);
+
+  // Load Data from API
   useEffect(() => {
-    setIsLoading(true);
-    setData([
-      {
-        id: '1',
-        claimId: 'CLM-2024-001',
-        photo: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=400&h=300&fit=crop',
-        userName: 'Sarah Johnson',
-        hostelName: 'Bengaluru HSR',
-        bookingId: 'BK-45321',
-        otaVoucherId: 'OTA-9876',
-        phone: '+1-555-0123',
-        email: 'sarah.j@email.com',
-        checkoutDate: '2024-12-29',
-        dateTime: '2024-12-30T08:30:00',
-        status: 'pending',
-        hostelId: 'HST-001',
-      },
-      {
-        id: '2',
-        claimId: 'CLM-2024-002',
-        photo: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=300&fit=crop',
-        userName: 'Michael Chen',
-        hostelName: 'Bengaluru Majestic',
-        bookingId: 'BK-45322',
-        otaVoucherId: 'OTA-9877',
-        phone: '+1-555-0124',
-        email: 'mchen@email.com',
-        checkoutDate: '2024-12-29',
-        dateTime: '2024-12-30T10:15:00',
-        status: 'pending',
-        hostelId: 'HST-002',
-      },
-      {
-        id: '3',
-        claimId: 'CLM-2024-003',
-        photo: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=400&h=300&fit=crop',
-        userName: 'Emma Williams',
-        hostelName: 'Bengaluru Jayanagar',
-        bookingId: 'BK-45323',
-        otaVoucherId: 'OTA-9878',
-        phone: '+1-555-0125',
-        email: 'emma.w@email.com',
-        checkoutDate: '2024-12-28',
-        dateTime: '2024-12-29T14:20:00',
-        status: 'accepted',
-        hostelId: 'HST-003',
-        acceptanceComment: 'Verified review on Google. Reward processed.',
-      },
-      {
-        id: '4',
-        claimId: 'CLM-2024-004',
-        photo: 'https://images.unsplash.com/photo-1553877522-43269d4ea984?w=400&h=300&fit=crop',
-        userName: 'James Brown',
-        hostelName: 'Goa',
-        bookingId: 'BK-45324',
-        otaVoucherId: 'OTA-9879',
-        phone: '+1-555-0126',
-        email: 'jbrown@email.com',
-        checkoutDate: '2024-12-27',
-        dateTime: '2024-12-28T16:45:00',
-        status: 'rejected',
-        hostelId: 'HST-004',
-        rejectionReason: 'We are unable to see the review on the associated platform.',
-      },
-      {
-        id: '5',
-        claimId: 'CLM-2024-005',
-        photo: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=300&fit=crop',
-        userName: 'Olivia Martinez',
-        hostelName: 'Kasol',
-        bookingId: 'BK-45325',
-        otaVoucherId: 'OTA-9880',
-        phone: '+1-555-0127',
-        email: 'olivia.m@email.com',
-        checkoutDate: '2024-12-30',
-        dateTime: '2024-12-30T09:00:00',
-        status: 'pending',
-        hostelId: 'HST-005',
-      },
-      {
-        id: '6',
-        claimId: 'CLM-2024-006',
-        photo: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=400&h=300&fit=crop',
-        userName: 'David Lee',
-        hostelName: 'Jaipur',
-        bookingId: 'BK-45326',
-        otaVoucherId: 'OTA-9881',
-        phone: '+1-555-0128',
-        email: 'david.lee@email.com',
-        checkoutDate: '2024-12-30',
-        dateTime: '2024-12-30T11:30:00',
-        status: 'pending',
-        hostelId: 'HST-006',
-      },
-      {
-        id: '7',
-        claimId: 'CLM-2024-007',
-        photo: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=400&h=300&fit=crop',
-        userName: 'Robert Taylor',
-        hostelName: 'Old Town Hostel',
-        bookingId: 'BK-45327',
-        otaVoucherId: 'OTA-9882',
-        phone: '+1-555-0129',
-        email: 'rtaylor@email.com',
-        checkoutDate: '2024-12-26',
-        dateTime: '2024-12-27T10:00:00',
-        status: 'accepted',
-        hostelId: 'HST-007',
-      },
-      {
-        id: '8',
-        claimId: 'CLM-2024-008',
-        photo: 'https://images.unsplash.com/photo-1551836022-4c4c79ecde51?w=400&h=300&fit=crop',
-        userName: 'Lisa Anderson',
-        hostelName: 'Garden Hostel',
-        bookingId: 'BK-45328',
-        otaVoucherId: 'OTA-9883',
-        phone: '+1-555-0130',
-        email: 'lisa.a@email.com',
-        checkoutDate: '2024-12-29',
-        dateTime: '2024-12-30T07:45:00',
-        status: 'pending',
-        hostelId: 'HST-008',
-      },
-    ]);
-    setIsLoading(false);
-  }, []);
+    fetchClaims();
+  }, [fetchClaims]);
 
   // Optimized Filter Logic
   useEffect(() => {
-    setIsLoading(true);
+    // Don't filter if data is still loading from API
+    if (isLoadingData) {
+      return;
+    }
+
+    setIsFiltering(true);
 
     // Wrap heavy logic in setTimeout to push it to the next event loop tick.
     // This allows React to render the Loading Spinner FIRST.
@@ -220,11 +215,11 @@ const Dashboard = () => {
       }
 
       setFilteredData(result);
-      setIsLoading(false);
+      setIsFiltering(false);
     }, 0); // 0ms delay is enough to unblock the main thread
 
     return () => clearTimeout(timer);
-  }, [data, filters]);
+  }, [data, filters, isLoadingData]);
 
   // Handle Stats Card Click
   const handleStatClick = (filterValue) => {
@@ -232,7 +227,19 @@ const Dashboard = () => {
   };
 
   const getStatusCount = (status) => {
-    return data.filter((item) => item.status === status).length;
+    if (status === 'all') {
+      return summary.total_claims;
+    }
+    switch (status) {
+      case 'pending':
+        return summary.pending;
+      case 'accepted':
+        return summary.accepted;
+      case 'rejected':
+        return summary.rejected;
+      default:
+        return data.filter((item) => item.status === status).length;
+    }
   };
 
   return (
@@ -256,9 +263,15 @@ const Dashboard = () => {
                   <p className="text-[0.75rem] md:text-[0.875rem] leading-[1rem] md:leading-[1.25rem] font-normal text-[#717182]">
                     {stat.name}
                   </p>
-                  <p className={`mt-2 text-[1.25rem] md:text-[1.5rem] leading-[1.75rem] md:leading-[2rem] font-bold ${stat.textColor}`}>
-                    {stat.filterValue === 'all' ? data.length : getStatusCount(stat.filterValue)}
-                  </p>
+                  {isLoadingData ? (
+                    <div className="mt-2 flex items-center gap-2">
+                      <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-gray-400"></div>
+                    </div>
+                  ) : (
+                    <p className={`mt-2 text-[1.25rem] md:text-[1.5rem] leading-[1.75rem] md:leading-[2rem] font-bold ${stat.textColor}`}>
+                      {getStatusCount(stat.filterValue)}
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
@@ -271,21 +284,39 @@ const Dashboard = () => {
         <Filters filters={filters} setFilters={setFilters} />
       </div>
 
-      {isLoading ? (
+      {error && (
+        <div className="flex bg-white p-[3rem] h-[7.625rem] rounded-[0.625rem] border-[0.823px] md:border border-[rgba(0,0,0,0.1)] items-center justify-center">
+          <span className="text-red-500 text-[1rem] leading-[1.5rem] font-normal">
+            {error}
+          </span>
+        </div>
+      )}
+      {isLoadingData ? (
         <div className="flex bg-white p-[3rem] h-[20rem] rounded-[0.625rem] border-[0.823px] md:border border-[rgba(0,0,0,0.1)] items-center justify-center flex-col gap-3">
           <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gray-900"></div>
-          <span className="text-[#717182] text-sm">Loading...</span>
+          <span className="text-[#717182] text-sm">Loading claims...</span>
         </div>
-      ) : filteredData?.length === 0 ? (
+      ) : isFiltering ? (
+        <div className="flex bg-white p-[3rem] h-[20rem] rounded-[0.625rem] border-[0.823px] md:border border-[rgba(0,0,0,0.1)] items-center justify-center flex-col gap-3">
+          <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-gray-900"></div>
+          <span className="text-[#717182] text-sm">Filtering...</span>
+        </div>
+      ) : !error && filteredData?.length === 0 ? (
         <div className="flex bg-white p-[3rem] h-[7.625rem] rounded-[0.625rem] border-[0.823px] md:border border-[rgba(0,0,0,0.1)] items-center justify-center">
           <span className="text-[#717182] text-[1rem] leading-[1.5rem] font-normal">
             No claims found matching your filters
           </span>
         </div>
-      ) : (
+      ) : !error && (
         <div className="flex flex-col gap-4">
           {filteredData.map((item) => (
-            <ReviewCard key={item.id} item={item} setShowToast={setShowToast} setToastMessage={setToastMessage} />
+            <ReviewCard 
+              key={item.id} 
+              item={item} 
+              setShowToast={setShowToast} 
+              setToastMessage={setToastMessage}
+              onRefresh={fetchClaims}
+            />
           ))}
         </div>
       )}

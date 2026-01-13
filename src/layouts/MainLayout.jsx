@@ -8,6 +8,11 @@ const MainLayout = () => {
   const navigate = useNavigate();
   const { isAuthenticated, isLoading, logout, user } = useAuth();
   const [userData, setUserData] = useState(user);
+
+  // Sync userData with user from context
+  useEffect(() => {
+    setUserData(user);
+  }, [user]);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [isDesktopSidebarCollapsed, setIsDesktopSidebarCollapsed] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -113,7 +118,7 @@ const MainLayout = () => {
                 {/* Name & EMail */}
                 <div className="flex flex-col items-start self-stretch px-4 pt-3 pb-[1px] border-b border-[#F3F4F6] mb-1">
                   <p className="text-[#101828] text-[1rem] font-medium leading-6 tracking-[-0.312px]">
-                    {userData?.name || "Test"}
+                    {userData?.full_name || "User"}
                   </p>
                   <p className="text-[#6A7282] text-[0.875rem] font-normal leading-5 tracking-[-0.15px] mb-2">
                     {userData?.email}

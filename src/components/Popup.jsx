@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import { DropdownIcon, CloseIcon } from "../icons/svgIcons";
+import { useAuth } from "../context/AuthContext";
 
-const Popup = ({ mode, setShowPopup, claimId, setShowToast, setToastMessage }) => {
+const Popup = ({ mode, setShowPopup, claimId, uuid, setShowToast, setToastMessage, onSuccess }) => {
+  const { user } = useAuth();
+  const baseUrl = import.meta.env.VITE_GOSTOPS_BE_BASEURL;
+
   const rejectOptions = [
     "We are unable to see the review on the associated platform.",
     "Booking details do not match the submitted review.",
@@ -13,41 +17,84 @@ const Popup = ({ mode, setShowPopup, claimId, setShowToast, setToastMessage }) =
   const [openDropdown, setOpenDropdown] = useState(false);
   const [rejectReason, setRejectReason] = useState(rejectOptions[0]);
   const [comment, setComment] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleClose = () => {
-    setShowPopup(false);
+    if (!isLoading) {
+      setShowPopup(false);
+    }
   };
 
-  const handleConfirmAction = () => {
-    if (mode === "accept") {
-      const payload = {
-        claimId: claimId,
-        status: "accepted",
-        comment: comment
-      };
-      console.log("Accepting Claim:", payload);
-
-      // POST API...
-      setShowToast(true);
-      setToastMessage(`Claim ${claimId} has been accepted`);
-
-      setShowToast(true);
-    } else {
-      const payload = {
-        claimId: claimId,
-        status: "rejected",
-        reason: rejectReason,
-        comment: comment
-      };
-      console.log("Rejecting Claim:", payload);
-
-      // POST API...
-      setShowToast(true);
-      setToastMessage(`Claim ${claimId} has been rejected`);
+  const handleConfirmAction = async () => {
+    if (!uuid) {
+      setError("Claim UUID is missing");
+      return;
     }
 
-    // Close popup after action
-    setShowPopup(false);
+    setIsLoading(true);
+    setError("");
+
+    try {
+      let payload;
+      let url = `${baseUrl}/api/core/v1/incentive-claim/${uuid}/status/`;
+
+      if (mode === "accept") {
+        payload = {
+          action: "accept",
+        };
+        if (comment.trim()) {
+          payload.comments = comment.trim();
+        }
+      } else {
+        // For reject, use custom reason if "Others" is selected
+        const finalRejectionReason = rejectReason === "Others" && comment.trim() 
+          ? comment.trim() 
+          : rejectReason;
+        
+        payload = {
+          action: "reject",
+          rejection_reason: finalRejectionReason,
+          comments: comment.trim() || "",
+        };
+      }
+
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${user?.token}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const result = await response.json();
+      console.log(`${mode === "accept" ? "Accept" : "Reject"} response:`, result);
+
+      if (response.ok && result.status === "success") {
+        setShowToast(true);
+        setToastMessage(
+          mode === "accept"
+            ? result.message || `Claim ${claimId} has been accepted`
+            : result.message || `Claim ${claimId} has been rejected`
+        );
+        
+        // Call success callback to refresh data
+        if (onSuccess) {
+          onSuccess();
+        }
+        
+        // Close popup after successful action
+        setShowPopup(false);
+      } else {
+        setError(result.message || `Failed to ${mode === "accept" ? "accept" : "reject"} claim. Please try again.`);
+      }
+    } catch (error) {
+      console.error(`Error ${mode === "accept" ? "accepting" : "rejecting"} claim:`, error);
+      setError(`Failed to ${mode === "accept" ? "accept" : "reject"} claim. Please try again.`);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -178,32 +225,35 @@ const Popup = ({ mode, setShowPopup, claimId, setShowToast, setToastMessage }) =
           )}
 
           {/* Other Custom Reject area */}
-          {rejectReason == "Others" && <div className="flex flex-col gap-2">
-            <label
-              htmlFor="reason"
-              className="text-[#0A0A0A] text-[0.875rem] leading-[0.875rem] font-medium"
-            >
-              Custom Reason *
-            </label>
-            <textarea
-              id="reason"
-              rows="3"
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
-              placeholder={"Please specify the reason..."}
-              className="
-                w-full px-3 py-2
-                rounded-[8px]
-                border border-transparent
-                bg-[#F3F3F5]
-                text-[#0A0A0A] text-[0.875rem] leading-[1.25rem] font-normal
-                resize-none
-                focus:outline-none
-                focus:ring-0
-                focus:shadow-[0_0_0_2.902px_rgba(161,161,161,0.48)]
-              "
-            />
-          </div>}
+          {rejectReason === "Others" && (
+            <div className="flex flex-col gap-2">
+              <label
+                htmlFor="customReason"
+                className="text-[#0A0A0A] text-[0.875rem] leading-[0.875rem] font-medium"
+              >
+                Custom Reason *
+              </label>
+              <textarea
+                id="customReason"
+                rows="3"
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                placeholder={"Please specify the reason..."}
+                className="
+                  w-full px-3 py-2
+                  rounded-[8px]
+                  border border-transparent
+                  bg-[#F3F3F5]
+                  text-[#0A0A0A] text-[0.875rem] leading-[1.25rem] font-normal
+                  resize-none
+                  focus:outline-none
+                  focus:ring-0
+                  focus:shadow-[0_0_0_2.902px_rgba(161,161,161,0.48)]
+                "
+                disabled={isLoading}
+              />
+            </div>
+          )}
 
           {/* Text area */}
           <div className="flex flex-col gap-2">
@@ -234,15 +284,26 @@ const Popup = ({ mode, setShowPopup, claimId, setShowToast, setToastMessage }) =
                 focus:ring-0
                 focus:shadow-[0_0_0_2.902px_rgba(161,161,161,0.48)]
               "
+              disabled={isLoading}
             />
           </div>
         </div>
+
+        {/* Error Message */}
+        {error && (
+          <div className="flex w-full p-2 bg-[#FEF2F2] rounded-[0.5rem] border-[0.823px] md:border border-[#FFC9C9]">
+            <span className="text-[#82181A] text-[0.75rem] leading-[1rem] font-normal">
+              {error}
+            </span>
+          </div>
+        )}
 
         {/* Buttons */}
         <div className="flex flex-col md:flex-row justify-end items-center gap-2">
           <button
             onClick={handleClose}
-            className="flex items-center justify-center cursor-pointer w-full md:w-auto bg-[#FFF] px-4 py-2 rounded-[0.5rem] border border-[rgba(0,0,0,0.1)]"
+            disabled={isLoading}
+            className="flex items-center justify-center cursor-pointer w-full md:w-auto bg-[#FFF] px-4 py-2 rounded-[0.5rem] border border-[rgba(0,0,0,0.1)] disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <span className="text-black text-[0.875rem] leading-[1.25rem] font-medium">
               Cancel
@@ -251,11 +312,18 @@ const Popup = ({ mode, setShowPopup, claimId, setShowToast, setToastMessage }) =
 
           <button
             onClick={handleConfirmAction}
-            className={`flex items-center justify-center cursor-pointer w-full md:w-auto ${mode === "accept" ? "bg-[#008000]" : "bg-[#D4183D]"} px-4 py-2 rounded-[0.5rem]`}
+            disabled={isLoading || (mode === "reject" && rejectReason === "Others" && !comment.trim())}
+            className={`flex items-center justify-center cursor-pointer w-full md:w-auto ${mode === "accept" ? "bg-[#008000]" : "bg-[#D4183D]"} px-4 py-2 rounded-[0.5rem] disabled:opacity-50 disabled:cursor-not-allowed`}
           >
-            <span className="text-white text-[0.875rem] leading-[1.25rem] font-medium">
-              Confirm {mode === "accept" ? "Acceptance" : "Rejection"}
-            </span>
+            {isLoading ? (
+              <span className="text-white text-[0.875rem] leading-[1.25rem] font-medium">
+                Processing...
+              </span>
+            ) : (
+              <span className="text-white text-[0.875rem] leading-[1.25rem] font-medium">
+                Confirm {mode === "accept" ? "Acceptance" : "Rejection"}
+              </span>
+            )}
           </button>
         </div>
 

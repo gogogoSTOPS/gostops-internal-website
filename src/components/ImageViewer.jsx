@@ -77,7 +77,7 @@ const ImageViewer = ({ setShowImage, showImageURL, setShowImageURL }) => {
         </div>
 
         {/* Image */}
-        <div className="row-span-3 flex items-center justify-center">
+        <div className="row-span-3 flex items-center justify-center text-white">
           <img
             src={showImageURL}
             alt="Preview"

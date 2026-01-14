@@ -24,7 +24,7 @@ const Dashboard = () => {
   });
   const [isLoadingData, setIsLoadingData] = useState(true); // For API data fetching
   const [filteredData, setFilteredData] = useState([]);
-  const [filters, setFilters] = useState({ claimStatus: 'pending', timePeriod: 'all' }); // Default to pending status and all time
+  const [filters, setFilters] = useState({ claimStatus: 'all', timePeriod: 'all' }); // Default to pending status and all time
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [error, setError] = useState("");
@@ -196,7 +196,7 @@ const Dashboard = () => {
       <div className="grid grid-cols-2 gap-3 md:gap-4 lg:grid-cols-4">
         {stats.map((stat) => {
           // Default to 'pending' if no claimStatus is set
-          const currentStatus = filters.claimStatus || 'pending';
+          const currentStatus = filters.claimStatus || 'all';
           const isSelected = currentStatus === stat.filterValue;
 
           return (

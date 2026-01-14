@@ -68,7 +68,7 @@ const MainLayout = () => {
         `}
       >
         {/* Header */}
-        <header className={`flex shrink-0 items-center justify-between border-b border-black md:border-[rgba(0,0,0,0.10)] bg-white
+        <header className={`flex shrink-0 items-center md:justify-between border-b border-black md:border-[rgba(0,0,0,0.10)] bg-white
           h-[4.5rem] px-4 w-full ${isMobileSidebarOpen ? "z-0" : "z-50"} relative
           md:h-[5.5rem] md:px-6`}
         >

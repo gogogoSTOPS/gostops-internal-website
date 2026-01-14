@@ -118,7 +118,7 @@ const LoginPage = () => {
         {/* Header */}
         <div className="flex flex-col items-center gap-1">
           <h1 className="text-[#0A0A0A] text-center text-2xl font-medium leading-8 tracking-[0.07px]">
-            goSTOPS Internal Dashboard
+            goSTOPS CX Dashboard
           </h1>
           <p className="text-[#717182] text-center text-base font-normal leading-6 tracking-[-0.312px]">
             Enter your credentials to access the dashboard

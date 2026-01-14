@@ -48,7 +48,7 @@ const Sidebar = ({ isOpen, onClose, isCollapsed, toggleCollapse, menuItems, hand
           <h1 className={`text-[#101828] text-[1.25rem] font-bold leading-[1.75rem] tracking-[-0.449px]
             ${isCollapsed ? 'hidden' : 'block'}
           `}>
-            GoStops Internal
+            CX Dashboard
           </h1>
 
           <button

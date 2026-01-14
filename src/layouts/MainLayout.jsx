@@ -86,7 +86,7 @@ const MainLayout = () => {
           {/* Desktop Title */}
           <div className="hidden md:flex flex-col items-baseline gap-1">
             <h2 className="text-[#0A0A0A] text-[1.5rem] font-bold leading-8 tracking-[0.07px]">
-              goSTOPS Internal Dashboard
+              Incentivise Reviews
             </h2>
             <span className="text-[#717182] text-[0.875rem] font-normal leading-5 tracking-[-0.15px] ml-1">
               Manage and review customer reward claims
@@ -96,7 +96,7 @@ const MainLayout = () => {
           {/* Mobile Title */}
           <div className="md:hidden">
             <h2 className="text-[#0A0A0A] text-[1.25rem] font-bold leading-7 tracking-[-0.449px]">
-              goSTOPS Internal Dashboard
+              Incentivise Reviews
             </h2>
           </div>
 

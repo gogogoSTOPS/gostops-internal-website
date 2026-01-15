@@ -142,14 +142,14 @@ const ReviewCard = ({ item, setShowToast, setToastMessage, onRefresh }) => {
 
             {item.status == "accepted" && item?.acceptanceComment &&
               <div className="flex w-full p-2 bg-[#F0FDF4] rounded-[0.5rem] border-[0.823px] md:border border-[#B9F8CF]">
-                <span className="text-[#0D542B] text-[0.75rem] leading-[1rem] font-normal">
+                <span className="text-[#0D542B] text-[0.75rem] leading-[1rem] font-medium">
                   Note: {item?.acceptanceComment || "Accepted without comments."}
                 </span>
               </div>
             }
             {item.status == "rejected" &&
               <div className="flex w-full p-2 bg-[#FEF2F2] rounded-[0.5rem] border-[0.823px] md:border border-[#FFC9C9]">
-                <span className="text-[#82181A] text-[0.75rem] leading-[1rem] font-normal">
+                <span className="text-[#82181A] text-[0.75rem] leading-[1rem] font-medium">
                   Rejected: {item?.rejectionReason || "No reason provided."}
                 </span>
               </div>

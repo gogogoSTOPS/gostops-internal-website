@@ -45,8 +45,8 @@ const Dashboard = () => {
 
   // Transform API claim data to dashboard format
   const transformClaimData = (claim) => {
-    
-    
+
+
     return {
       id: claim.uuid,
       claimId: claim.uuid,
@@ -81,27 +81,27 @@ const Dashboard = () => {
     try {
       // Build query parameters
       const queryParams = new URLSearchParams();
-      
+
       // Add status filter (from claimStatus in filters)
       if (currentFilters?.claimStatus && currentFilters.claimStatus !== 'all') {
         queryParams.append('status', currentFilters.claimStatus);
       }
-      
+
       // Add hostel filter (slug)
       if (currentFilters?.hostelName) {
         queryParams.append('hostel_slug', currentFilters.hostelName);
       }
-      
+
       // Add search value
       if (currentFilters?.searchValue) {
         queryParams.append('search', currentFilters.searchValue);
       }
-      
+
       // Add search field
       if (currentFilters?.searchField && currentFilters.searchField !== 'all') {
         queryParams.append('search_field', currentFilters.searchField);
       }
-      
+
       // Add time period filter
       if (currentFilters?.timePeriod && currentFilters.timePeriod !== 'all') {
         queryParams.append('time_period', currentFilters.timePeriod);
@@ -216,9 +216,9 @@ const Dashboard = () => {
                       <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-gray-400"></div>
                     </div>
                   ) : (
-                  <p className={`mt-2 text-[1.25rem] md:text-[1.5rem] leading-[1.75rem] md:leading-[2rem] font-bold ${stat.textColor}`}>
+                    <p className={`mt-2 text-[1.25rem] md:text-[1.5rem] leading-[1.75rem] md:leading-[2rem] font-bold ${stat.textColor}`}>
                       {getStatusCount(stat.filterValue)}
-                  </p>
+                    </p>
                   )}
                 </div>
               </div>
@@ -229,8 +229,8 @@ const Dashboard = () => {
 
       {/* Filters */}
       <div className="bg-white rounded-[0.875rem] border-[0.874px] md:border border-[rgba(0,0,0,0.1)] p-4 md:p-6">
-        <Filters 
-          filters={filters} 
+        <Filters
+          filters={filters}
           setFilters={setFilters}
           hostels={user?.hostels_can_access || []}
         />
@@ -257,12 +257,12 @@ const Dashboard = () => {
       ) : !error && (
         <div className="flex flex-col gap-4">
           {filteredData.map((item) => (
-            <ReviewCard 
-              key={item.id} 
-              item={item} 
-              setShowToast={setShowToast} 
+            <ReviewCard
+              key={item.id}
+              item={item}
+              setShowToast={setShowToast}
               setToastMessage={setToastMessage}
-              onRefresh={fetchClaims}
+              onRefresh={() => fetchClaims(filters)}
             />
           ))}
         </div>

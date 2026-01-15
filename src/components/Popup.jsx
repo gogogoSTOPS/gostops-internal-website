@@ -313,7 +313,7 @@ const Popup = ({ mode, setShowPopup, claimId, uuid, setShowToast, setToastMessag
         )}
 
         {/* Buttons */}
-        <div className="flex flex-col md:flex-row justify-end items-center gap-2">
+        <div className="flex flex-col-reverse md:flex-row justify-end items-center gap-2">
           <button
             onClick={handleClose}
             disabled={isLoading}

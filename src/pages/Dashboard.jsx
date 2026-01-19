@@ -84,6 +84,11 @@ const Dashboard = () => {
       // Build query parameters
       const queryParams = new URLSearchParams();
 
+      // Add employee_id
+      if (user?.employee_id) {
+        queryParams.append('employee_id', user.employee_id);
+      }
+
       // Add status filter (from separate claimStatus state)
       if (currentClaimStatus && currentClaimStatus !== 'all') {
         queryParams.append('status', currentClaimStatus);

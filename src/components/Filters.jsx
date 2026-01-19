@@ -19,7 +19,6 @@ const FILTER_CONFIG = [
       { value: "name", label: "Name" },
       { value: "claimId", label: "Claim ID" },
       { value: "bookingId", label: "Booking ID" },
-      { value: "otaId", label: "OTA ID" },
       { value: "phone", label: "Phone Number" },
       { value: "email", label: "Email" },
     ],

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { ChevronDownIcon, ClearIcon, SearchIcon } from "../icons/svgIcons";
 
-// Filters
+// Filters Configuration
 const FILTER_CONFIG = [
   {
     id: "hostelName",
@@ -30,7 +30,6 @@ const FILTER_CONFIG = [
     placeholder: "Search by all fields...",
     icon: <SearchIcon />,
   },
-
   {
     id: "timePeriod",
     label: "Time Period",
@@ -46,13 +45,9 @@ const FILTER_CONFIG = [
 ];
 
 const Filters = ({ filters, setFilters, hostels = [] }) => {
-  // State to track which dropdown is currently open (by ID)
   const [openDropdown, setOpenDropdown] = useState(null);
+  const dropdownRefs = useRef({});
 
-  // Ref for click-outside detection
-  const dropdownRef = useRef(null);
-
-  // Build hostel options from hostels prop
   const hostelOptions = [
     { value: "", label: "All Hostels" },
     ...hostels.map((hostel) => ({
@@ -61,19 +56,45 @@ const Filters = ({ filters, setFilters, hostels = [] }) => {
     })),
   ];
 
-  // Note: Filter initialization is handled by parent component
-  // This useEffect was causing unnecessary filter updates
+  useEffect(() => {
+    setFilters((prev) => {
+      const baseFilters = FILTER_CONFIG.reduce((acc, curr) => {
+        if (!(curr.id in prev)) {
+          acc[curr.id] = "";
+        } else {
+          acc[curr.id] = prev[curr.id];
+        }
+        return acc;
+      }, {});
 
-  // Close dropdowns if clicking outside
+      if (!prev.claimStatus) {
+        baseFilters.claimStatus = "pending";
+      } else {
+        baseFilters.claimStatus = prev.claimStatus;
+      }
+
+      return baseFilters;
+    });
+  }, []);
+
+  // Click Outside Logic
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      // If no dropdown is open, do nothing
+      if (!openDropdown) return;
+
+      // Get the specific DOM element for the currently open filter
+      const currentActiveRef = dropdownRefs.current[openDropdown];
+
+      // If the click is NOT inside the currently open filter's container, close it
+      if (currentActiveRef && !currentActiveRef.contains(event.target)) {
         setOpenDropdown(null);
       }
     };
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  }, [openDropdown]); // Dependent on openDropdown state
 
   const handleChange = (name, value) => {
     setFilters((prev) => ({ ...prev, [name]: value }));
@@ -90,32 +111,31 @@ const Filters = ({ filters, setFilters, hostels = [] }) => {
     setOpenDropdown(openDropdown === id ? null : id);
   };
 
-  // Check if any filter has a value to enable/disable Clear button
   const hasActiveFilters = Object.values(filters).some((val) => val !== "");
 
-  const labelStyle =
-    "text-[#0A0A0A] text-[0.875rem] font-medium leading-[0.875rem] -tracking-[0.15px]";
-  const inputBaseStyle =
-    "flex h-[2.25rem] px-[0.75rem] items-center shrink-0 self-stretch rounded-[0.5rem] border border-transparent bg-[#F3F3F5] transition-all duration-200";
-  const textInputStyle =
-    "bg-transparent w-full outline-none text-[0.875rem] font-normal text-[#0A0A0A] placeholder-[#717182] -tracking-[0.15px]";
-  const dropdownTriggerStyle =
-    "w-full flex justify-between items-center cursor-pointer select-none text-[0.875rem] font-medium -tracking-[0.15px]";
+  const labelStyle = "text-[#0A0A0A] text-[0.875rem] font-medium leading-[0.875rem] -tracking-[0.15px]";
+  const inputBaseStyle = "flex h-[2.25rem] px-[0.75rem] items-center shrink-0 self-stretch rounded-[0.5rem] border border-transparent bg-[#F3F3F5] transition-all duration-200";
+  const textInputStyle = "bg-transparent w-full outline-none text-[0.875rem] font-normal text-[#0A0A0A] placeholder-[#717182] -tracking-[0.15px]";
+  const dropdownTriggerStyle = "w-full flex justify-between items-center cursor-pointer select-none text-[0.875rem] font-medium -tracking-[0.15px]";
 
   return (
-    <div className="w-full" ref={dropdownRef}>
+    <div className="w-full">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[1rem] items-end">
         {FILTER_CONFIG.map((filter) => (
           <div
             key={filter.id}
+            // Assign a specific ref to this filter item based on its ID
+            ref={(el) => (dropdownRefs.current[filter.id] = el)}
             className="flex flex-col items-start gap-[0.5rem] w-full relative"
           >
             <label className={labelStyle}>{filter.label}</label>
 
             {/* TEXT INPUT */}
             {filter.type === "text" && (
-              <div
+              // Added onClick to text input to ensure other dropdowns close if this is clicked
+              <div 
                 className={`${inputBaseStyle} gap-[0.75rem] focus-within:border-black/20 focus-within:bg-white`}
+                onClick={() => setOpenDropdown(null)}
               >
                 {filter?.icon}
                 <input
@@ -140,7 +160,6 @@ const Filters = ({ filters, setFilters, hostels = [] }) => {
                 >
                   <div className={dropdownTriggerStyle}>
                     <span className="text-[#0A0A0A] font-medium truncate flex-1 text-left pr-2">
-                      {/* Show Selected Label or Placeholder */}
                       {filter.id === "hostelName" && filters[filter.id]
                         ? hostelOptions.find(
                             (opt) => opt.value === filters[filter.id]

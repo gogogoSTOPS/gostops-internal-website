@@ -31,7 +31,7 @@ const FILTER_CONFIG = [
     placeholder: "Search by all fields...",
     icon: <SearchIcon />,
   },
-  
+
   {
     id: "timePeriod",
     label: "Time Period",
@@ -44,7 +44,7 @@ const FILTER_CONFIG = [
       { value: "30days", label: "Last 30 Days" },
     ],
   },
-  
+
 ];
 
 const Filters = ({ filters, setFilters, hostels = [] }) => {
@@ -78,14 +78,14 @@ const Filters = ({ filters, setFilters, hostels = [] }) => {
         },
         {}
       );
-      
+
       // Ensure claimStatus defaults to 'pending' if not set
       if (!prev.claimStatus) {
         baseFilters.claimStatus = 'pending';
       } else {
         baseFilters.claimStatus = prev.claimStatus;
       }
-      
+
       return baseFilters;
     });
   }, []);
@@ -155,18 +155,20 @@ const Filters = ({ filters, setFilters, hostels = [] }) => {
                   onClick={() => toggleDropdown(filter.id)}
                 >
                   <div className={dropdownTriggerStyle}>
-                    <span className="text-[#0A0A0A] font-medium">
+                    <span className="text-[#0A0A0A] font-medium truncate flex-1 text-left pr-2">
                       {/* Show Selected Label or Placeholder */}
                       {filter.id === "hostelName" && filters[filter.id]
                         ? hostelOptions.find(opt => opt.value === filters[filter.id])?.label
                         : filter.id === "hostelName" && !filters[filter.id]
-                        ? filter.placeholder
-                        : filters[filter.id]
-                        ? filter.options.find(opt => opt.value === filters[filter.id])?.label
-                        : filter.placeholder
+                          ? filter.placeholder
+                          : filters[filter.id]
+                            ? filter.options.find(opt => opt.value === filters[filter.id])?.label
+                            : filter.placeholder
                       }
                     </span>
-                    <ChevronDownIcon isOpen={openDropdown === filter.id} />
+                    <div className="shrink-0">
+                      <ChevronDownIcon isOpen={openDropdown === filter.id} />
+                    </div>
                   </div>
                 </div>
 

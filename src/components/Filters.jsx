@@ -63,32 +63,8 @@ const Filters = ({ filters, setFilters, hostels = [] }) => {
     })),
   ];
 
-  useEffect(() => {
-    // Initialize filter fields if they don't exist
-    setFilters((prev) => {
-      const baseFilters = FILTER_CONFIG.reduce(
-        (acc, curr) => {
-          // Only set if the field doesn't exist in prev
-          if (!(curr.id in prev)) {
-            acc[curr.id] = "";
-          } else {
-            acc[curr.id] = prev[curr.id];
-          }
-          return acc;
-        },
-        {}
-      );
-      
-      // Ensure claimStatus defaults to 'pending' if not set
-      if (!prev.claimStatus) {
-        baseFilters.claimStatus = 'pending';
-      } else {
-        baseFilters.claimStatus = prev.claimStatus;
-      }
-      
-      return baseFilters;
-    });
-  }, []);
+  // Note: Filter initialization is handled by parent component
+  // This useEffect was causing unnecessary filter updates
 
   // Close dropdowns if clicking outside
   useEffect(() => {

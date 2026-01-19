@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import Filters from "../components/Filters";
 import ReviewCard from "../components/ReviewCard";
 import Toast from "../components/Toast";
@@ -24,10 +24,12 @@ const Dashboard = () => {
   });
   const [isLoadingData, setIsLoadingData] = useState(true); // For API data fetching
   const [filteredData, setFilteredData] = useState([]);
-  const [filters, setFilters] = useState({ claimStatus: 'all', timePeriod: 'all' }); // Default to pending status and all time
+  const [filters, setFilters] = useState({ timePeriod: 'all' }); // Filters (excluding claimStatus)
+  const [claimStatus, setClaimStatus] = useState('all'); // Separate state for claim status
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [error, setError] = useState("");
+  const isInitialMount = useRef(true);
 
   // Map API status to dashboard status
   const mapStatus = (apiStatus) => {
@@ -69,7 +71,7 @@ const Dashboard = () => {
   };
 
   // Fetch claims function with filters
-  const fetchClaims = useCallback(async (currentFilters) => {
+  const fetchClaims = useCallback(async (currentFilters, currentClaimStatus) => {
     if (!user?.token) {
       setIsLoadingData(false);
       return;
@@ -82,9 +84,9 @@ const Dashboard = () => {
       // Build query parameters
       const queryParams = new URLSearchParams();
 
-      // Add status filter (from claimStatus in filters)
-      if (currentFilters?.claimStatus && currentFilters.claimStatus !== 'all') {
-        queryParams.append('status', currentFilters.claimStatus);
+      // Add status filter (from separate claimStatus state)
+      if (currentClaimStatus && currentClaimStatus !== 'all') {
+        queryParams.append('status', currentClaimStatus);
       }
 
       // Add hostel filter (slug)
@@ -92,14 +94,14 @@ const Dashboard = () => {
         queryParams.append('hostel_slug', currentFilters.hostelName);
       }
 
-      // Add search value
-      if (currentFilters?.searchValue) {
-        queryParams.append('search', currentFilters.searchValue);
-      }
-
-      // Add search field
-      if (currentFilters?.searchField && currentFilters.searchField !== 'all') {
-        queryParams.append('search_field', currentFilters.searchField);
+      // Add search value and field only if searchValue is not empty
+      if (currentFilters?.searchValue?.trim()) {
+        queryParams.append('search_value', currentFilters.searchValue.trim());
+        
+        // Only add search field if it's selected and not 'all'
+        if (currentFilters?.searchField && currentFilters.searchField !== 'all') {
+          queryParams.append('search_key', currentFilters.searchField);
+        }
       }
 
       // Add time period filter
@@ -163,14 +165,36 @@ const Dashboard = () => {
     }
   }, [user?.token, baseUrl]);
 
-  // Load Data from API on mount and when filters change
+  // Initial mount - only call API once when user token is ready
   useEffect(() => {
-    fetchClaims(filters);
-  }, [filters, fetchClaims]);
+    if (!user?.token || !isInitialMount.current) {
+      return;
+    }
+    
+    isInitialMount.current = false;
+    fetchClaims(filters, claimStatus);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.token]);
 
-  // Handle Stats Card Click - updates filter and triggers API call
+  // Call API when filters or claimStatus change (after initial mount)
+  useEffect(() => {
+    // Skip if still on initial mount or user token not ready
+    if (isInitialMount.current || !user?.token) {
+      return;
+    }
+
+    // If searchField is selected but searchValue is empty, don't make API call
+    if (filters.searchField && filters.searchField !== 'all' && !filters.searchValue?.trim()) {
+      return;
+    }
+
+    fetchClaims(filters, claimStatus);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filters.hostelName, filters.searchValue, filters.searchField, filters.timePeriod, claimStatus]);
+
+  // Handle Stats Card Click - updates claimStatus and triggers API call
   const handleStatClick = (filterValue) => {
-    setFilters((prev) => ({ ...prev, claimStatus: filterValue }));
+    setClaimStatus(filterValue);
   };
 
   const getStatusCount = (status) => {
@@ -195,9 +219,7 @@ const Dashboard = () => {
       {/* Stats Grid */}
       <div className="grid grid-cols-2 gap-3 md:gap-4 lg:grid-cols-4">
         {stats.map((stat) => {
-          // Default to 'pending' if no claimStatus is set
-          const currentStatus = filters.claimStatus || 'all';
-          const isSelected = currentStatus === stat.filterValue;
+          const isSelected = claimStatus === stat.filterValue;
 
           return (
             <div
@@ -216,9 +238,9 @@ const Dashboard = () => {
                       <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-gray-400"></div>
                     </div>
                   ) : (
-                    <p className={`mt-2 text-[1.25rem] md:text-[1.5rem] leading-[1.75rem] md:leading-[2rem] font-bold ${stat.textColor}`}>
+                  <p className={`mt-2 text-[1.25rem] md:text-[1.5rem] leading-[1.75rem] md:leading-[2rem] font-bold ${stat.textColor}`}>
                       {getStatusCount(stat.filterValue)}
-                    </p>
+                  </p>
                   )}
                 </div>
               </div>
@@ -262,7 +284,7 @@ const Dashboard = () => {
               item={item}
               setShowToast={setShowToast}
               setToastMessage={setToastMessage}
-              onRefresh={() => fetchClaims(filters)}
+               onRefresh={() => fetchClaims(filters, claimStatus)}
             />
           ))}
         </div>

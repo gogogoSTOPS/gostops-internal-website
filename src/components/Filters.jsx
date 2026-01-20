@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ChevronDownIcon, ClearIcon, SearchIcon } from "../icons/svgIcons";
 
 // Filters Configuration
@@ -133,7 +133,7 @@ const Filters = ({ filters, setFilters, hostels = [] }) => {
             {/* TEXT INPUT */}
             {filter.type === "text" && (
               // Added onClick to text input to ensure other dropdowns close if this is clicked
-              <div 
+              <div
                 className={`${inputBaseStyle} gap-[0.75rem] focus-within:border-black/20 focus-within:bg-white`}
                 onClick={() => setOpenDropdown(null)}
               >
@@ -153,24 +153,23 @@ const Filters = ({ filters, setFilters, hostels = [] }) => {
               <div className="relative w-full">
                 {/* Trigger Button */}
                 <div
-                  className={`${inputBaseStyle} ${
-                    openDropdown === filter.id ? "bg-gray-200" : ""
-                  }`}
+                  className={`${inputBaseStyle} ${openDropdown === filter.id ? "bg-gray-200" : ""
+                    }`}
                   onClick={() => toggleDropdown(filter.id)}
                 >
                   <div className={dropdownTriggerStyle}>
                     <span className="text-[#0A0A0A] font-medium truncate flex-1 text-left pr-2">
                       {filter.id === "hostelName" && filters[filter.id]
                         ? hostelOptions.find(
-                            (opt) => opt.value === filters[filter.id]
-                          )?.label
+                          (opt) => opt.value === filters[filter.id]
+                        )?.label
                         : filter.id === "hostelName" && !filters[filter.id]
-                        ? filter.placeholder
-                        : filters[filter.id]
-                        ? filter.options.find(
-                            (opt) => opt.value === filters[filter.id]
-                          )?.label
-                        : filter.placeholder}
+                          ? filter.placeholder
+                          : filters[filter.id]
+                            ? filter.options.find(
+                              (opt) => opt.value === filters[filter.id]
+                            )?.label
+                            : filter.placeholder}
                     </span>
                     <div className="shrink-0">
                       <ChevronDownIcon isOpen={openDropdown === filter.id} />
@@ -190,10 +189,9 @@ const Filters = ({ filters, setFilters, hostels = [] }) => {
                         onClick={() => handleChange(filter.id, option.value)}
                         className={`
                           px-[0.75rem] py-[0.5rem] text-[0.875rem] cursor-pointer transition-colors
-                          ${
-                            filters[filter.id] === option.value
-                              ? "bg-[#F3F3F5] font-semibold text-[#0A0A0A]"
-                              : "text-[#0A0A0A] font-medium hover:bg-[#F3F3F5] hover:text-[#0A0A0A]"
+                          ${filters[filter.id] === option.value
+                            ? "bg-[#F3F3F5] font-semibold text-[#0A0A0A]"
+                            : "text-[#0A0A0A] font-medium hover:bg-[#F3F3F5] hover:text-[#0A0A0A]"
                           }
                         `}
                       >
@@ -214,10 +212,9 @@ const Filters = ({ filters, setFilters, hostels = [] }) => {
             disabled={!hasActiveFilters}
             className={`
               flex w-full h-[2.25rem] px-[1rem] justify-center items-center gap-[1.0625rem] rounded-[0.5rem] border transition-all duration-200
-              ${
-                hasActiveFilters
-                  ? "border-[rgba(0,0,0,0.10)] bg-white hover:bg-gray-50 cursor-pointer text-[#0A0A0A]"
-                  : "border-transparent bg-gray-50 cursor-not-allowed text-gray-400"
+              ${hasActiveFilters
+                ? "border-[rgba(0,0,0,0.10)] bg-white hover:bg-gray-50 cursor-pointer text-[#0A0A0A]"
+                : "border-transparent bg-gray-50 cursor-not-allowed text-gray-400"
               }
             `}
           >

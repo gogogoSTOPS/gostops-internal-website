@@ -16,7 +16,6 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     const baseUrl = import.meta.env.VITE_GOSTOPS_BE_BASEURL;
-    console.log(baseUrl, "baseUrl")
     e.preventDefault();
     setError("");
 
@@ -61,7 +60,6 @@ const LoginPage = () => {
       );
 
       const data = await response.json();
-      console.log("Login response:", data);
 
       if (response.ok && data.status === "success" && data.data) {
         // Login successful - extract user data from the new API response structure

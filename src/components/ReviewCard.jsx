@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { HostelIcon, DateIcon, BookingOrderIcon, OTAIcon, PhoneIcon, CardEmailIcon, AcceptIcon, RejectIcon } from '../icons/svgIcons';
 import ImageViewer from './ImageViewer';
 import Popup from './Popup';
@@ -24,7 +24,6 @@ const ReviewCard = ({ item, setShowToast, setToastMessage, onRefresh }) => {
   return (
     <>
       <div className="bg-white rounded-[0.875rem] border-[0.874px] md:border border-[rgba(0,0,0,0.1)] p-4 md:p-6 gap-4 md:gap-6 flex flex-col lg:flex-row">
-
         {/* Image */}
         <div className="flex flex-col w-full lg:w-1/2 gap-2">
           <div
@@ -47,7 +46,6 @@ const ReviewCard = ({ item, setShowToast, setToastMessage, onRefresh }) => {
 
         {/* Content Details */}
         <div className="flex flex-col w-full lg:w-1/2 gap-2 items-start min-w-0">
-
           {/* Header: Name, ID and Status Tag */}
           <div className="flex w-full justify-between items-start gap-2">
             {/* Name & ID */}
@@ -70,7 +68,6 @@ const ReviewCard = ({ item, setShowToast, setToastMessage, onRefresh }) => {
 
           {/* Details Grid */}
           <div className="flex flex-col gap-2 w-full mt-2">
-
             <div className="flex flex-col md:flex-row gap-2 md:gap-4 w-full">
               {/* Hostel Name */}
               <div className="flex items-center gap-2 w-full md:basis-1/2 min-w-0">

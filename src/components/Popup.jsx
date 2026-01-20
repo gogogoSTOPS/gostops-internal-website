@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { DropdownIcon, CloseIcon } from "../icons/svgIcons";
 import { useAuth } from "../context/AuthContext";
 
@@ -61,10 +61,10 @@ const Popup = ({ mode, setShowPopup, claimId, uuid, setShowToast, setToastMessag
         }
       } else {
         // For reject, use custom reason if "Others" is selected
-        const finalRejectionReason = rejectReason === "Others" && comment.trim() 
-          ? comment.trim() 
+        const finalRejectionReason = rejectReason === "Others" && comment.trim()
+          ? comment.trim()
           : rejectReason;
-        
+
         payload = {
           ...basePayload,
           action: "reject",
@@ -83,7 +83,6 @@ const Popup = ({ mode, setShowPopup, claimId, uuid, setShowToast, setToastMessag
       });
 
       const result = await response.json();
-      console.log(`${mode === "accept" ? "Accept" : "Reject"} response:`, result);
 
       if (response.ok && result.status === "success") {
         setShowToast(true);
@@ -92,12 +91,12 @@ const Popup = ({ mode, setShowPopup, claimId, uuid, setShowToast, setToastMessag
             ? result.message || `Claim ${claimId} has been accepted`
             : result.message || `Claim ${claimId} has been rejected`
         );
-        
+
         // Call success callback to refresh data
         if (onSuccess) {
           onSuccess();
         }
-        
+
         // Close popup after successful action
         setShowPopup(false);
       } else {
@@ -115,20 +114,12 @@ const Popup = ({ mode, setShowPopup, claimId, uuid, setShowToast, setToastMessag
     <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center px-4 md:px-0">
       {/* Backdrop */}
       <div className="absolute inset-0" onClick={handleClose} />
-
       {/* Viewer */}
       <div className="flex flex-col relative z-10 w-full md:max-w-[50%] max-h-[80vh] md:max-h-[90vh] bg-white rounded-2xl p-6 gap-8">
-
         {/* Close icon */}
         <button
           onClick={handleClose}
-          className="
-          absolute 
-          top-4 right-4
-          w-4 h-4
-          flex items-center justify-center
-          cursor-pointer
-        "
+          className="absolute top-4 right-4 w-4 h-4 flex items-center justify-center cursor-pointer"
         >
           <CloseIcon stroke={"black"} />
         </button>
@@ -145,7 +136,6 @@ const Popup = ({ mode, setShowPopup, claimId, uuid, setShowToast, setToastMessag
               : "Please select a reason for rejecting"}{" "}
             this claim ({claimId})
           </span>
-
         </div>
 
         {/* Input */}

@@ -47,8 +47,6 @@ const Dashboard = () => {
 
   // Transform API claim data to dashboard format
   const transformClaimData = (claim) => {
-
-
     return {
       id: claim.uuid,
       claimId: claim.uuid,
@@ -102,7 +100,7 @@ const Dashboard = () => {
       // Add search value and field only if searchValue is not empty
       if (currentFilters?.searchValue?.trim()) {
         queryParams.append('search_value', currentFilters.searchValue.trim());
-        
+
         // Only add search field if it's selected and not 'all'
         if (currentFilters?.searchField && currentFilters.searchField !== 'all') {
           queryParams.append('search_key', currentFilters.searchField);
@@ -126,7 +124,6 @@ const Dashboard = () => {
       });
 
       const result = await response.json();
-      console.log("Claims API response:", result);
 
       if (response.ok && result.status === "success" && result.data) {
         // Set summary data
@@ -175,10 +172,9 @@ const Dashboard = () => {
     if (!user?.token || !isInitialMount.current) {
       return;
     }
-    
+
     isInitialMount.current = false;
     fetchClaims(filters, claimStatus);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.token]);
 
   // Call API when filters or claimStatus change (after initial mount)
@@ -243,9 +239,9 @@ const Dashboard = () => {
                       <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-gray-400"></div>
                     </div>
                   ) : (
-                  <p className={`mt-2 text-[1.25rem] md:text-[1.5rem] leading-[1.75rem] md:leading-[2rem] font-bold ${stat.textColor}`}>
+                    <p className={`mt-2 text-[1.25rem] md:text-[1.5rem] leading-[1.75rem] md:leading-[2rem] font-bold ${stat.textColor}`}>
                       {getStatusCount(stat.filterValue)}
-                  </p>
+                    </p>
                   )}
                 </div>
               </div>
@@ -289,7 +285,7 @@ const Dashboard = () => {
               item={item}
               setShowToast={setShowToast}
               setToastMessage={setToastMessage}
-               onRefresh={() => fetchClaims(filters, claimStatus)}
+              onRefresh={() => fetchClaims(filters, claimStatus)}
             />
           ))}
         </div>

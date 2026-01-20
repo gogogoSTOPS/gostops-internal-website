@@ -159,17 +159,15 @@ const Filters = ({ filters, setFilters, hostels = [] }) => {
                 >
                   <div className={dropdownTriggerStyle}>
                     <span className="text-[#0A0A0A] font-medium truncate flex-1 text-left pr-2">
-                      {filter.id === "hostelName" && filters[filter.id]
+                      {filter.id === "hostelName"
                         ? hostelOptions.find(
-                          (opt) => opt.value === filters[filter.id]
-                        )?.label
-                        : filter.id === "hostelName" && !filters[filter.id]
-                          ? filter.placeholder
-                          : filters[filter.id]
-                            ? filter.options.find(
+                            (opt) => opt.value === (filters[filter.id] || "")
+                          )?.label || filter.placeholder
+                        : filters[filter.id]
+                          ? filter.options.find(
                               (opt) => opt.value === filters[filter.id]
                             )?.label
-                            : filter.placeholder}
+                          : filter.placeholder}
                     </span>
                     <div className="shrink-0">
                       <ChevronDownIcon isOpen={openDropdown === filter.id} />

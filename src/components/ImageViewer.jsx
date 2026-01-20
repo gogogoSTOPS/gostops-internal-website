@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { DownloadIcon, CloseIcon } from "../icons/svgIcons";
 
 const ImageViewer = ({ setShowImage, showImageURL, setShowImageURL }) => {

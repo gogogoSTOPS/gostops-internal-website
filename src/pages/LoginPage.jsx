@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import { useNavigate, Navigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import { EmailIcon, PasswordIcon } from '../icons/svgIcons';
+import { useState } from "react";
+import { useNavigate, Navigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { EmailIcon, PasswordIcon } from "../icons/svgIcons";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -16,7 +16,6 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     const baseUrl = import.meta.env.VITE_GOSTOPS_BE_BASEURL;
-    console.log(baseUrl, "baseUrl")
     e.preventDefault();
     setError("");
 
@@ -45,26 +44,22 @@ const LoginPage = () => {
 
     try {
       const inputData = {
-        "username": email,
-        "password": password
-      }
-    
-      const response = await fetch(
-        `${baseUrl}/api/employee/v2/login/`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(inputData),
-        }
-      );
+        username: email,
+        password: password,
+      };
+
+      const response = await fetch(`${baseUrl}/api/employee/v2/login/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(inputData),
+      });
 
       const data = await response.json();
-      console.log("Login response:", data);
 
       if (response.ok && data.status === "success" && data.data) {
-        // Login successful - extract user data from the new API response structure
+        // Login successful - extract user data from the API response
         const userData = {
           email: email,
           full_name: data.data.full_name || "",
@@ -79,7 +74,11 @@ const LoginPage = () => {
         login(userData);
         navigate("/", { replace: true });
       } else {
-        setError(data.message || data.error || "Invalid email or password. Please try again.");
+        setError(
+          data.message ||
+            data.error ||
+            "Invalid email or password. Please try again."
+        );
       }
     } catch (error) {
       console.error("Login error:", error);
@@ -126,10 +125,13 @@ const LoginPage = () => {
         </div>
 
         {/* Login Form */}
-        <form onSubmit={handleSubmit} className="flex w-full max-w-[24.875rem] flex-col items-start gap-4">
+        <form
+          onSubmit={handleSubmit}
+          className="flex w-full max-w-99.5 flex-col items-start gap-4"
+        >
           {/* Email Input */}
           <div className="flex flex-col items-start gap-2 self-stretch">
-            <label className="text-[#0A0A0A] text-sm font-medium leading-[0.875rem] tracking-[-0.15px]">
+            <label className="text-[#0A0A0A] text-sm font-medium leading-3.5 tracking-[-0.15px]">
               Email Address
             </label>
             <div
@@ -151,14 +153,15 @@ const LoginPage = () => {
 
           {/* Password Input */}
           <div className="flex flex-col items-start gap-2 self-stretch">
-            <label className="text-[#0A0A0A] text-sm font-medium leading-[0.875rem] tracking-[-0.15px]">
+            <label className="text-[#0A0A0A] text-sm font-medium leading-3.5 tracking-[-0.15px]">
               Password
             </label>
             <div
               className={`flex h-9 w-full items-center gap-2 rounded-lg px-3 border
-                ${password
-                  ? "border-[rgba(0,0,0,0)] shadow-[0_0_0_2.903px_rgba(161,161,161,0.48)]"
-                  : "bg-[#F3F3F5] border-transparent"
+                ${
+                  password
+                    ? "border-[rgba(0,0,0,0)] shadow-[0_0_0_2.903px_rgba(161,161,161,0.48)]"
+                    : "bg-[#F3F3F5] border-transparent"
                 }
               
                   focus-within:border-[rgba(0,0,0,0)]
@@ -181,7 +184,7 @@ const LoginPage = () => {
 
           {/* Error Message */}
           {error && (
-            <span className="text-red-500 text-sm font-medium leading-[0.875rem] tracking-[-0.15px]">
+            <span className="text-red-500 text-sm font-medium leading-3.5 tracking-[-0.15px]">
               {error}
             </span>
           )}
@@ -190,7 +193,7 @@ const LoginPage = () => {
           <button
             type="submit"
             disabled={isLoadingLogin}
-            className="flex w-full items-center justify-center rounded-lg bg-[#030213] py-[0.5rem] px-5 md:px-[7.5rem] self-stretch cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex w-full items-center justify-center rounded-lg bg-[#030213] py-2 px-5 md:px-30 self-stretch cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <span className="text-white text-center text-sm font-medium leading-5 tracking-[-0.15px]">
               {isLoadingLogin ? "Logging in..." : "Login"}

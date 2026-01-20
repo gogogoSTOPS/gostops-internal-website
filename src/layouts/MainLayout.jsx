@@ -7,20 +7,22 @@ import { useAuth } from '../context/AuthContext';
 const MainLayout = () => {
   const navigate = useNavigate();
   const { isAuthenticated, isLoading, logout, user } = useAuth();
-  const [userData, setUserData] = useState(user);
 
-  // Sync userData with user from context
-  useEffect(() => {
-    setUserData(user);
-  }, [user]);
+  const [userData, setUserData] = useState(user);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [isDesktopSidebarCollapsed, setIsDesktopSidebarCollapsed] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  
   const profileRef = useRef(null);
 
   const menuItems = [
     { name: 'Incentivise Reviews', href: '/', icon: <ReviewsIcon /> },
   ];
+
+  // Sync userData with user from context
+  useEffect(() => {
+    setUserData(user);
+  }, [user]);
 
   useEffect(() => {
     if (!userData) navigate('/login', { replace: true });

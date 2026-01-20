@@ -131,7 +131,7 @@ const ReviewCard = ({ item, setShowToast, setToastMessage, onRefresh }) => {
               {/* Email */}
               <div className="flex items-center gap-2 w-full min-w-0">
                 <CardEmailIcon />
-                <span className="text-[0.875rem] leading-[1.25rem] text-[#0A0A0A] font-normal break-words whitespace-normal">
+                <span className="text-[0.875rem] leading-[1.25rem] text-[#0A0A0A] font-normal min-w-0 break-all">
                   {item.email}
                 </span>
               </div>

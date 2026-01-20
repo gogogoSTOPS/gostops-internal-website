@@ -18,6 +18,7 @@ const FILTER_CONFIG = [
       { value: "all", label: "All Fields" },
       { value: "name", label: "Name" },
       { value: "claimId", label: "Claim ID" },
+      { value: "otaID", label: "Ota ID" },
       { value: "bookingId", label: "Booking ID" },
       { value: "phone", label: "Phone Number" },
       { value: "email", label: "Email" },
@@ -113,10 +114,14 @@ const Filters = ({ filters, setFilters, hostels = [] }) => {
 
   const hasActiveFilters = Object.values(filters).some((val) => val !== "");
 
-  const labelStyle = "text-[#0A0A0A] text-[0.875rem] font-medium leading-[0.875rem] -tracking-[0.15px]";
-  const inputBaseStyle = "flex h-[2.25rem] px-[0.75rem] items-center shrink-0 self-stretch rounded-[0.5rem] border border-transparent bg-[#F3F3F5] transition-all duration-200";
-  const textInputStyle = "bg-transparent w-full outline-none text-[0.875rem] font-normal text-[#0A0A0A] placeholder-[#717182] -tracking-[0.15px]";
-  const dropdownTriggerStyle = "w-full flex justify-between items-center cursor-pointer select-none text-[0.875rem] font-medium -tracking-[0.15px]";
+  const labelStyle =
+    "text-[#0A0A0A] text-[0.875rem] font-medium leading-[0.875rem] -tracking-[0.15px]";
+  const inputBaseStyle =
+    "flex h-[2.25rem] px-[0.75rem] items-center shrink-0 self-stretch rounded-[0.5rem] border border-transparent bg-[#F3F3F5] transition-all duration-200";
+  const textInputStyle =
+    "bg-transparent w-full outline-none text-[0.875rem] font-normal text-[#0A0A0A] placeholder-[#717182] -tracking-[0.15px]";
+  const dropdownTriggerStyle =
+    "w-full flex justify-between items-center cursor-pointer select-none text-[0.875rem] font-medium -tracking-[0.15px]";
 
   return (
     <div className="w-full">
@@ -153,8 +158,9 @@ const Filters = ({ filters, setFilters, hostels = [] }) => {
               <div className="relative w-full">
                 {/* Trigger Button */}
                 <div
-                  className={`${inputBaseStyle} ${openDropdown === filter.id ? "bg-gray-200" : ""
-                    }`}
+                  className={`${inputBaseStyle} ${
+                    openDropdown === filter.id ? "bg-gray-200" : ""
+                  }`}
                   onClick={() => toggleDropdown(filter.id)}
                 >
                   <div className={dropdownTriggerStyle}>
@@ -164,10 +170,10 @@ const Filters = ({ filters, setFilters, hostels = [] }) => {
                             (opt) => opt.value === (filters[filter.id] || "")
                           )?.label || filter.placeholder
                         : filters[filter.id]
-                          ? filter.options.find(
-                              (opt) => opt.value === filters[filter.id]
-                            )?.label
-                          : filter.placeholder}
+                        ? filter.options.find(
+                            (opt) => opt.value === filters[filter.id]
+                          )?.label
+                        : filter.placeholder}
                     </span>
                     <div className="shrink-0">
                       <ChevronDownIcon isOpen={openDropdown === filter.id} />
@@ -187,9 +193,10 @@ const Filters = ({ filters, setFilters, hostels = [] }) => {
                         onClick={() => handleChange(filter.id, option.value)}
                         className={`
                           px-[0.75rem] py-[0.5rem] text-[0.875rem] cursor-pointer transition-colors
-                          ${filters[filter.id] === option.value
-                            ? "bg-[#F3F3F5] font-semibold text-[#0A0A0A]"
-                            : "text-[#0A0A0A] font-medium hover:bg-[#F3F3F5] hover:text-[#0A0A0A]"
+                          ${
+                            filters[filter.id] === option.value
+                              ? "bg-[#F3F3F5] font-semibold text-[#0A0A0A]"
+                              : "text-[#0A0A0A] font-medium hover:bg-[#F3F3F5] hover:text-[#0A0A0A]"
                           }
                         `}
                       >
@@ -210,9 +217,10 @@ const Filters = ({ filters, setFilters, hostels = [] }) => {
             disabled={!hasActiveFilters}
             className={`
               flex w-full h-[2.25rem] px-[1rem] justify-center items-center gap-[1.0625rem] rounded-[0.5rem] border transition-all duration-200
-              ${hasActiveFilters
-                ? "border-[rgba(0,0,0,0.10)] bg-white hover:bg-gray-50 cursor-pointer text-[#0A0A0A]"
-                : "border-transparent bg-gray-50 cursor-not-allowed text-gray-400"
+              ${
+                hasActiveFilters
+                  ? "border-[rgba(0,0,0,0.10)] bg-white hover:bg-gray-50 cursor-pointer text-[#0A0A0A]"
+                  : "border-transparent bg-gray-50 cursor-not-allowed text-gray-400"
               }
             `}
           >

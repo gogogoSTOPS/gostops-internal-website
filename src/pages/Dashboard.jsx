@@ -57,7 +57,7 @@ const Dashboard = () => {
       hostelName: claim.hostel?.name || "N/A",
       hostelSlug: claim.hostel?.slug || "",
       bookingId: claim.order_id || "N/A",
-      otaVoucherId: claim.platform?.toUpperCase() || "N/A",
+      otaVoucherId: claim.voucher?.toUpperCase(),
       phone: claim.user_profile?.phone || "N/A",
       email: claim.user_profile?.email || "N/A",
       checkoutDate: claim.created_at || new Date().toISOString(),

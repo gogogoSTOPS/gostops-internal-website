@@ -1,7 +1,16 @@
-import { useState } from 'react';
-import { HostelIcon, DateIcon, BookingOrderIcon, OTAIcon, PhoneIcon, CardEmailIcon, AcceptIcon, RejectIcon } from '../icons/svgIcons';
-import ImageViewer from './ImageViewer';
-import Popup from './Popup';
+import { useState } from "react";
+import {
+  HostelIcon,
+  DateIcon,
+  BookingOrderIcon,
+  OTAIcon,
+  PhoneIcon,
+  CardEmailIcon,
+  AcceptIcon,
+  RejectIcon,
+} from "../icons/svgIcons";
+import ImageViewer from "./ImageViewer";
+import Popup from "./Popup";
 
 const ReviewCard = ({ item, setShowToast, setToastMessage, onRefresh }) => {
   const [showImage, setShowImage] = useState(false);
@@ -11,13 +20,13 @@ const ReviewCard = ({ item, setShowToast, setToastMessage, onRefresh }) => {
 
   const getStatusColor = (status) => {
     switch (status?.toLowerCase()) {
-      case 'pending':
-        return 'bg-[#FF9800]';
-      case 'rejected':
-        return 'bg-[#FF0000]';
-      case 'accepted':
+      case "pending":
+        return "bg-[#FF9800]";
+      case "rejected":
+        return "bg-[#FF0000]";
+      case "accepted":
       default:
-        return 'bg-[#008000]';
+        return "bg-[#008000]";
     }
   };
 
@@ -59,9 +68,13 @@ const ReviewCard = ({ item, setShowToast, setToastMessage, onRefresh }) => {
             </div>
 
             {/* Status Tag */}
-            <div className={`flex px-[8px] py-[2px] justify-center items-center gap-1 rounded-[8px] border-[0.823px] border-transparent ${getStatusColor(item.status)} shrink-0`}>
+            <div
+              className={`flex px-[8px] py-[2px] justify-center items-center gap-1 rounded-[8px] border-[0.823px] border-transparent ${getStatusColor(
+                item.status
+              )} shrink-0`}
+            >
               <span className="text-white text-[0.75rem] font-medium leading-[1.25rem] capitalize">
-                {item.status || 'N/A'}
+                {item.status || "N/A"}
               </span>
             </div>
           </div>
@@ -98,12 +111,14 @@ const ReviewCard = ({ item, setShowToast, setToastMessage, onRefresh }) => {
                 </span>
               </div>
               {/* OTA ID */}
-              <div className="flex items-center gap-2 w-full md:basis-1/2 min-w-0">
-                <OTAIcon />
-                <span className="text-[0.875rem] leading-[1.25rem] text-[#0A0A0A] font-normal break-words whitespace-normal">
-                  {item.otaVoucherId}
-                </span>
-              </div>
+              {item.otaVoucherId && (
+                <div className="flex items-center gap-2 w-full md:basis-1/2 min-w-0">
+                  <OTAIcon />
+                  <span className="text-[0.875rem] leading-[1.25rem] text-[#0A0A0A] font-normal break-words whitespace-normal">
+                    {item.otaVoucherId}
+                  </span>
+                </div>
+              )}
             </div>
 
             <div className="flex flex-col md:flex-row gap-2 md:gap-4 w-full">
@@ -137,21 +152,22 @@ const ReviewCard = ({ item, setShowToast, setToastMessage, onRefresh }) => {
               </span>
             </div>
 
-            {item.status == "accepted" && item?.acceptanceComment &&
+            {item.status == "accepted" && item?.acceptanceComment && (
               <div className="flex w-full p-2 bg-[#F0FDF4] rounded-[0.5rem] border-[0.823px] md:border border-[#B9F8CF]">
                 <span className="text-[#0D542B] text-[0.75rem] leading-[1rem] font-medium">
-                  Note: {item?.acceptanceComment || "Accepted without comments."}
+                  Note:{" "}
+                  {item?.acceptanceComment || "Accepted without comments."}
                 </span>
               </div>
-            }
-            {item.status == "rejected" &&
+            )}
+            {item.status == "rejected" && (
               <div className="flex w-full p-2 bg-[#FEF2F2] rounded-[0.5rem] border-[0.823px] md:border border-[#FFC9C9]">
                 <span className="text-[#82181A] text-[0.75rem] leading-[1rem] font-medium">
                   Rejected: {item?.rejectionReason || "No reason provided."}
                 </span>
               </div>
-            }
-            {item.status == "pending" &&
+            )}
+            {item.status == "pending" && (
               <div className="flex flex-col md:flex-row gap-2">
                 <button
                   onClick={() => {
@@ -178,23 +194,19 @@ const ReviewCard = ({ item, setShowToast, setToastMessage, onRefresh }) => {
                   </span>
                 </button>
               </div>
-            }
-
+            )}
           </div>
-
         </div>
-
       </div>
 
-      {showImage &&
+      {showImage && (
         <ImageViewer
           setShowImage={setShowImage}
           showImageURL={showImageURL}
           setShowImageURL={setShowImageURL}
         />
-      }
-      {
-        showPopup &&
+      )}
+      {showPopup && (
         <Popup
           mode={popUpMode}
           setShowPopup={setShowPopup}
@@ -204,9 +216,9 @@ const ReviewCard = ({ item, setShowToast, setToastMessage, onRefresh }) => {
           setToastMessage={setToastMessage}
           onSuccess={onRefresh}
         />
-      }
+      )}
     </>
-  )
-}
+  );
+};
 
 export default ReviewCard;

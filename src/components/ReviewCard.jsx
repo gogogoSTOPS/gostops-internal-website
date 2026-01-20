@@ -81,16 +81,17 @@ const ReviewCard = ({ item, setShowToast, setToastMessage, onRefresh }) => {
 
           {/* Details Grid */}
           <div className="flex flex-col gap-2 w-full mt-2">
-            <div className="flex flex-col md:flex-row gap-2 md:gap-4 w-full">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-2 w-full">
               {/* Hostel Name */}
-              <div className="flex items-center gap-2 w-full md:basis-1/2 min-w-0">
+              <div className="flex items-center gap-2 w-full min-w-0">
                 <HostelIcon />
                 <span className="text-[0.875rem] leading-[1.25rem] text-[#0A0A0A] font-normal break-words whitespace-normal">
                   {item.hostelName}
                 </span>
               </div>
+
               {/* Date */}
-              <div className="flex items-center gap-2 w-full md:basis-1/2 min-w-0">
+              <div className="flex items-center gap-2 w-full min-w-0">
                 <DateIcon />
                 <span className="text-[0.875rem] leading-[1.25rem] text-[#0A0A0A] font-normal break-words">
                   {new Date(item.checkoutDate).toLocaleDateString("en-US", {
@@ -100,37 +101,35 @@ const ReviewCard = ({ item, setShowToast, setToastMessage, onRefresh }) => {
                   })}
                 </span>
               </div>
-            </div>
 
-            <div className="flex flex-col md:flex-row gap-2 md:gap-4 w-full">
               {/* Booking Order ID */}
-              <div className="flex items-center gap-2 w-full md:basis-1/2 min-w-0">
+              <div className="flex items-center gap-2 w-full min-w-0">
                 <BookingOrderIcon />
                 <span className="text-[0.875rem] leading-[1.25rem] text-[#0A0A0A] font-normal break-words whitespace-normal">
                   {item.bookingId}
                 </span>
               </div>
+
               {/* OTA ID */}
               {item.otaVoucherId && (
-                <div className="flex items-center gap-2 w-full md:basis-1/2 min-w-0">
+                <div className="flex items-center gap-2 w-full min-w-0">
                   <OTAIcon />
                   <span className="text-[0.875rem] leading-[1.25rem] text-[#0A0A0A] font-normal break-words whitespace-normal">
                     {item.otaVoucherId}
                   </span>
                 </div>
               )}
-            </div>
 
-            <div className="flex flex-col md:flex-row gap-2 md:gap-4 w-full">
               {/* Phone */}
-              <div className="flex items-center gap-2 w-full md:basis-1/2 min-w-0">
+              <div className="flex items-center gap-2 w-full min-w-0">
                 <PhoneIcon />
                 <span className="text-[0.875rem] leading-[1.25rem] text-[#0A0A0A] font-normal break-words">
                   {item.phone}
                 </span>
               </div>
+
               {/* Email */}
-              <div className="flex items-center gap-2 w-full md:basis-1/2 min-w-0">
+              <div className="flex items-center gap-2 w-full min-w-0">
                 <CardEmailIcon />
                 <span className="text-[0.875rem] leading-[1.25rem] text-[#0A0A0A] font-normal break-words whitespace-normal">
                   {item.email}

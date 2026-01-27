@@ -61,7 +61,7 @@ const Dashboard = () => {
       phone: claim.user_profile?.phone || "N/A",
       email: claim.user_profile?.email || "N/A",
       checkoutDate: claim.created_at || new Date().toISOString(),
-      dateTime: claim.created_at || new Date().toISOString(),
+      dateTime: claim.updated_at || new Date().toISOString(),
       status: mapStatus(claim.status),
       hostelId: claim.hostel?.id?.toString() || "",
       rejectionReason: claim.rejection_reason || null,
@@ -149,7 +149,7 @@ const Dashboard = () => {
 
           // Transform and set claims data
           const transformedData = (result.data.claims || []).map(
-            transformClaimData
+            transformClaimData,
           );
           setData(transformedData);
           setFilteredData(transformedData); // Set filtered data directly from API
@@ -179,7 +179,7 @@ const Dashboard = () => {
         setIsLoadingData(false);
       }
     },
-    [user?.token, baseUrl]
+    [user?.token, baseUrl],
   );
 
   // Initial mount - only call API once when user token is ready

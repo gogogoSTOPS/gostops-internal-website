@@ -198,14 +198,14 @@ const ToastIcon = () => (
   </svg>
 );
 
-const LockRequestsIcon = () => (
+const LockRequestsIcon = ({ stroke = "white" }) => (
   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-          <rect x="3" y="2.5" width="14" height="10" rx="1.5" stroke="white" stroke-width="1.667" stroke-linecap="round" stroke-linejoin="round"></rect>
-          <path d="M7.5 15V17.5" stroke="white" stroke-width="1.667" stroke-linecap="round"></path>
-          <path d="M12.5 15V17.5" stroke="white" stroke-width="1.667" stroke-linecap="round"></path>
-          <rect x="6" y="6" width="3" height="3.5" rx="0.5" stroke="white" stroke-width="1.2"></rect>
-          <rect x="11" y="6" width="3" height="3.5" rx="0.5" stroke="white" stroke-width="1.2"></rect>
-        </svg>
+    <rect x="3" y="2.5" width="14" height="10" rx="1.5" stroke={stroke} stroke-width="1.667" stroke-linecap="round" stroke-linejoin="round"></rect>
+    <path d="M7.5 15V17.5" stroke={stroke} stroke-width="1.667" stroke-linecap="round"></path>
+    <path d="M12.5 15V17.5" stroke={stroke} stroke-width="1.667" stroke-linecap="round"></path>
+    <rect x="6" y="6" width="3" height="3.5" rx="0.5" stroke={stroke} stroke-width="1.2"></rect>
+    <rect x="11" y="6" width="3" height="3.5" rx="0.5" stroke={stroke} stroke-width="1.2"></rect>
+  </svg>
 );
 
 export { ChevronDownIcon, SearchIcon, ClearIcon, EmailIcon, PasswordIcon, BackIcon, CloseIconDesktop, CloseIconMobile, ReviewsIcon, UserIcon, LogoutIcon, HamburgerIcon, DropdownIcon, HostelIcon, DateIcon, BookingOrderIcon, OTAIcon, PhoneIcon, CardEmailIcon, AcceptIcon, RejectIcon, DownloadIcon, CloseIcon, ToastIcon, LockRequestsIcon };

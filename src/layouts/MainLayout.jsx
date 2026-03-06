@@ -1,11 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
-import { Outlet, useNavigate, Navigate } from 'react-router-dom';
+import { Outlet, useNavigate, Navigate, useLocation } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
-import { HamburgerIcon, ReviewsIcon, DropdownIcon, UserIcon, LogoutIcon } from '../icons/svgIcons';
+import { HamburgerIcon, ReviewsIcon, DropdownIcon, UserIcon, LogoutIcon, LockRequestsIcon } from '../icons/svgIcons';
 import { useAuth } from '../context/AuthContext';
 
 const MainLayout = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { isAuthenticated, isLoading, logout, user } = useAuth();
 
   const [userData, setUserData] = useState(user);
@@ -17,7 +18,18 @@ const MainLayout = () => {
 
   const menuItems = [
     { name: 'Incentivise Reviews', href: '/', icon: <ReviewsIcon /> },
+    { name: 'Lock Requests', href: '/2fa_lock', icon: <LockRequestsIcon /> },
   ];
+
+  const menuItemsHeaderText = [
+    { name: 'Incentivise Reviews', href: '/', title: 'Incentivise Reviews', desc: 'Manage and review customer reward claims', },
+    { name: 'Lock Requests', href: '/2fa_lock', title: 'Lock & Locker Access', desc: 'Manage lock and locker access requests from guests', },
+  ]
+
+  // Find the header data based on the current pathname
+  // Fallback to the first item if no match is found
+  const currentHeader = menuItemsHeaderText.find(item => item.href === location.pathname) 
+                        || menuItemsHeaderText[0];
 
   // Sync userData with user from context
   useEffect(() => {
@@ -88,17 +100,17 @@ const MainLayout = () => {
           {/* Desktop Title */}
           <div className="hidden md:flex flex-col items-baseline gap-1">
             <h2 className="text-[#0A0A0A] text-[1.5rem] font-bold leading-8 tracking-[0.07px]">
-              Incentivise Reviews
+              {currentHeader.title}
             </h2>
             <span className="text-[#717182] text-[0.875rem] font-normal leading-5 tracking-[-0.15px] ml-1">
-              Manage and review customer reward claims
+              {currentHeader.desc}
             </span>
           </div>
 
           {/* Mobile Title */}
           <div className="md:hidden">
             <h2 className="text-[#0A0A0A] text-[1.25rem] font-bold leading-7 tracking-[-0.449px]">
-              Incentivise Reviews
+              {currentHeader.title}
             </h2>
           </div>
 

@@ -25,9 +25,9 @@ const LockRequests = () => {
   const { user } = useAuth();
 
   const stats = [
-    { name: "Pending", textColor: "text-[#FF9800]", filterValue: "pending" },
-    { name: "Today", textColor: "text-[#008000]", filterValue: "accepted" },
-    { name: "Rejected", textColor: "text-[#FF0000]", filterValue: "rejected" },
+    { name: "Pending Requests", textColor: "text-[#FF9800]", filterValue: "pending" },
+    { name: "Approved Today", textColor: "text-[#008000]", filterValue: "accepted" },
+    { name: "Deneid Today", textColor: "text-[#FF0000]", filterValue: "rejected" },
   ];
 
   const [isLoadingData, setIsLoadingData] = useState(false);
@@ -62,7 +62,62 @@ const LockRequests = () => {
     closeModal();
   };
 
-  const getStatusCount = () => 1;
+  const getStatusCount = (filterValue) => {
+    if (filterValue === 'pending') {
+      return pendingData?.length || 0;
+    } else if (filterValue === 'accepted') {
+      return reportsData.filter(row => row.status.toLowerCase() === 'accepted').length;
+    } else if (filterValue === 'rejected') {
+      return reportsData.filter(row => row.status.toLowerCase() === 'rejected').length;
+    }
+  };
+
+  const handleDownloadCSV = () => {
+    // Define the headers for your CSV
+    const headers = [
+      'Date/Time', 
+      'Location', 
+      'Room', 
+      'Status', 
+      'Access Duration', 
+      'Actioned By', 
+      'Note/Reason'
+    ];
+
+    const csvRows = reportsData.map(row => {
+      return [
+        `"${row.datetime}"`,
+        `"${row.location}"`,
+        `"${row.room}"`,
+        `"${row.status}"`,
+        `"${row.duration}"`,
+        `"${row.actionedBy}"`,
+        `"${row.note}"`
+      ].join(','); // Join each column with a comma
+    });
+
+    // Combine headers and rows with line breaks
+    const csvString = [headers.join(','), ...csvRows].join('\n');
+
+    // Create a Blob (file-like object) from the CSV string
+    const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+
+    // Create a temporary link element to trigger the download
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `Lock_Reports_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    
+    // Clean up the DOM
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+
+    // Show a success toast
+    setToastMessage("CSV download started successfully.");
+    setShowToast(true);
+  };
 
   const paginatedPending = pendingData.slice((pendingPage - 1) * itemsPerPage, pendingPage * itemsPerPage);
   const paginatedReports = reportsData.slice((reportsPage - 1) * itemsPerPage, reportsPage * itemsPerPage);
@@ -74,7 +129,7 @@ const LockRequests = () => {
       {/* Stats Grid */}
       <div className="grid grid-cols-2 gap-3 md:gap-4 lg:grid-cols-3">
         {stats?.map((stat) => (
-          <div key={stat.name} className="cursor-pointer bg-white rounded-[0.625rem] gap-1 p-4.5 border-[0.823px] md:border border-[rgba(0,0,0,0.1)]">
+          <div key={stat.name} className="bg-white rounded-[0.625rem] gap-1 p-4.5 border-[0.823px] md:border border-[rgba(0,0,0,0.1)]">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-[0.75rem] md:text-[0.875rem] leading-4 md:leading-5 font-normal text-[#717182]">{stat.name}</p>
@@ -120,7 +175,7 @@ const LockRequests = () => {
         setFilters={setFilters}
         hostels={user?.hostels_can_access || []}
         activeTab={activeTab}
-        onDownload={() => { }}
+        onDownload={handleDownloadCSV}
       />
 
       {/* Error */}

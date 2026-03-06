@@ -16,11 +16,13 @@ const MainLayout = () => {
   
   const profileRef = useRef(null);
 
+  // Sidebar menu items
   const menuItems = [
     { name: 'Incentivise Reviews', href: '/', icon: <ReviewsIcon /> },
     { name: 'Lock Requests', href: '/2fa_lock', icon: <LockRequestsIcon /> },
   ];
 
+  // Header text for each menu item
   const menuItemsHeaderText = [
     { name: 'Incentivise Reviews', href: '/', title: 'Incentivise Reviews', desc: 'Manage and review customer reward claims', },
     { name: 'Lock Requests', href: '/2fa_lock', title: 'Lock & Locker Access', desc: 'Manage lock and locker access requests from guests', },

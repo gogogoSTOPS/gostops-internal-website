@@ -126,28 +126,6 @@ const LockRequests = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 md:px-6 py-4 md:py-6 gap-6 flex flex-col min-h-full w-full min-w-0">
-      {/* Stats Grid */}
-      <div className="grid grid-cols-2 gap-3 md:gap-4 lg:grid-cols-3">
-        {stats?.map((stat) => (
-          <div key={stat.name} className="bg-white rounded-[0.625rem] gap-1 p-4.5 border-[0.823px] md:border border-[rgba(0,0,0,0.1)]">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-[0.75rem] md:text-[0.875rem] leading-4 md:leading-5 font-normal text-[#717182]">{stat.name}</p>
-                {isLoadingData ? (
-                  <div className="mt-2 flex items-center gap-2">
-                    <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-gray-400"></div>
-                  </div>
-                ) : (
-                  <p className={`mt-2 text-[1.25rem] md:text-[1.5rem] leading-7 md:leading-8 font-bold ${stat.textColor}`}>
-                    {getStatusCount(stat.filterValue)}
-                  </p>
-                )}
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-
       {/* Tabs */}
       <div className="flex border-b-2 border-[#E5E7EB] overflow-x-auto whitespace-nowrap [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         <button

@@ -1,44 +1,32 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Toast from "../components/Toast";
 import { useAuth } from "../context/AuthContext";
 import LockFilters from "../components/LockRequests/LockFilters";
 import ActionModal from "../components/LockRequests/ActionModal";
 import TableData from "../components/LockRequests/TableData";
 
-// Sample Data 
-const initialPendingData = [
-  { id: 1, timestamp: '19-Feb 14:15', property: 'Mumbai, Andheri', room: 'Room 305 Bed B', reason: 'Emergency medical supplies needed', staff: 'Amit Patel', staffPhone: '+91 99887 76655' },
-  { id: 2, timestamp: '19-Feb 13:45', property: 'Delhi, Hauz Khas', room: 'Room 102 Bed A', reason: 'Guest locked out - forgot keys', staff: 'Sneha Reddy', staffPhone: '+91 96543 21098' },
-  { id: 3, timestamp: '19-Feb 12:20', property: 'Pune, Koregaon Park', room: 'Room 403 Bed C', reason: 'Maintenance check requested by guest', staff: 'Vikram Singh', staffPhone: '+91 94321 87654' },
-  { id: 4, timestamp: '19-Feb 11:05', property: 'Goa, Anjuna', room: 'Room 201 Bed A', reason: 'Locker combination not working', staff: 'Priya Nair', staffPhone: '+91 87654 32109' },
-];
-
-const initialReportsData = [
-  { id: 101, datetime: '19-Feb 12:10', location: 'Delhi, Safdarjung', room: 'Room 101 A', status: 'Accepted', duration: '30 min', actionedBy: 'Ravi (CX)', note: '–' },
-  { id: 102, datetime: '19-Feb 09:45', location: 'Varanasi', room: 'Room 302 C', status: 'Rejected', duration: '–', actionedBy: 'Neha (CX)', note: 'Guest is not the primary booker, verification failed.' },
-  { id: 103, datetime: '18-Feb 18:20', location: 'Mumbai, Bandra', room: 'Room 205 B', status: 'Accepted', duration: '1 hr', actionedBy: 'Amit (CX)', note: '–' },
-  { id: 104, datetime: '18-Feb 16:35', location: 'Bengaluru, Indiranagar', room: 'Room 408 D', status: 'Accepted', duration: '10 min', actionedBy: 'Priya (CX)', note: '–' },
-  { id: 105, datetime: '18-Feb 14:55', location: 'Chennai, Adyar', room: 'Room 310 A', status: 'Rejected', duration: '–', actionedBy: 'Ravi (CX)', note: 'Unable to verify guest identity over phone.' },
-];
-
 const LockRequests = () => {
-  const { user } = useAuth();
-
   const stats = [
     { name: "Pending Requests", textColor: "text-[#FF9800]", filterValue: "pending" },
     { name: "Approved Today", textColor: "text-[#008000]", filterValue: "accepted" },
-    { name: "Deneid Today", textColor: "text-[#FF0000]", filterValue: "rejected" },
+    { name: "Denied Today", textColor: "text-[#FF0000]", filterValue: "rejected" },
   ];
+
+  const baseUrl = import.meta.env.VITE_GOSTOPS_BE_BASEURL;
+  const { user } = useAuth();
 
   const [isLoadingData, setIsLoadingData] = useState(false);
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState('pending');
 
-  const [pendingData, setPendingData] = useState(initialPendingData);
-  const [reportsData, setReportsData] = useState(initialReportsData);
+  const [pendingData, setPendingData] = useState([]);
+  const [reportsData, setReportsData] = useState([]);
+  const [totalPending, setTotalPending] = useState(0);
+  const [totalReports, setTotalReports] = useState(0);
+
   const [pendingPage, setPendingPage] = useState(1);
   const [reportsPage, setReportsPage] = useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 10;
 
   const [filters, setFilters] = useState({
     status: "all",
@@ -49,80 +37,172 @@ const LockRequests = () => {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
 
+  // Helper to get all allowed hostel IDs
+  const getAllHostelIds = () => {
+    return user?.hostels_can_access?.map(h => h.id).join(',') || '';
+  };
+
+  // convert YYYY-MM-DD to DD-MM-YYYY for API
+  const formatApiDate = (dateStr) => {
+    if (!dateStr) return '';
+    const [year, month, day] = dateStr.split('-');
+    return `${day}-${month}-${year}`;
+  };
+
+  const fetchLockData = async () => {
+    setIsLoadingData(true);
+    setError(null);
+    try {
+      const selectedHostels = Array.isArray(filters.hostel) && filters.hostel.length > 0
+        ? filters.hostel.join(',')
+        : getAllHostelIds();
+
+      if (activeTab === 'pending') {
+        const url = `${baseUrl}/api/employee/v1/get-pending-lock-requests/?hostel_ids=${selectedHostels}&limit=${itemsPerPage}&page=${pendingPage - 1}`;
+        const res = await fetch(url, { headers: { Authorization: `Bearer ${user?.token}` } });
+        const json = await res.json();
+
+        if (json.status === "success") {
+          // Map API keys to TableData expected keys
+          const mapped = json.data.requests.map(req => ({
+            id: req.id,
+            timestamp: req.created_at,
+            property: req.hostel,
+            room: req.bed_info,
+            reason: req.requested_reason,
+            staff: req.requested_by_name,
+            staffPhone: req.requested_by_mobile
+          }));
+          setPendingData(mapped);
+          setTotalPending(json.data.total_records);
+        }
+      } else {
+        let url = `${baseUrl}/api/employee/v1/request-lock/history/?hostel_ids=${selectedHostels}&limit=${itemsPerPage}&page=${reportsPage - 1}`;
+
+        // Add optional filters
+        if (filters.status && filters.status !== 'all') {
+          url += `&status=${filters.status.toLowerCase()}`;
+        }
+        if (filters.fromDate) url += `&start_time=${formatApiDate(filters.fromDate)}`;
+        if (filters.toDate) url += `&end_time=${formatApiDate(filters.toDate)}`;
+
+        const res = await fetch(url, { headers: { Authorization: `Bearer ${user?.token}` } });
+        const json = await res.json();
+
+        if (json.status === "success") {
+          // Map API keys to TableData expected keys
+          const mapped = json.data.requests.map(req => ({
+            id: req.id,
+            datetime: req.created_at,
+            location: req.hostel,
+            room: req.bed_info,
+            status: req.status.charAt(0).toUpperCase() + req.status.slice(1),
+            duration: req.access_duration ? `${req.access_duration} min` : '–',
+            actionedBy: req.action_by,
+            note: req.action_reason || '–'
+          }));
+
+          setReportsData(mapped);
+          setTotalReports(json.data.total_records);
+        }
+      }
+    } catch (err) {
+      console.log(err);
+      setError("Failed to fetch data.");
+    } finally {
+      setIsLoadingData(false);
+    }
+  };
+
+  // Trigger fetch when tab, page, or filters change
+  useEffect(() => {
+    if (user?.token) fetchLockData();
+  }, [activeTab, pendingPage, reportsPage, filters, user?.token]);
+
   // Modal state
   const [modal, setModal] = useState({ isOpen: false, type: null, id: null });
 
   const openModal = (type, id) => setModal({ isOpen: true, type, id });
   const closeModal = () => setModal({ isOpen: false, type: null, id: null });
 
-  const handleConfirm = (type, data) => {
-    console.log('Action:', type, 'ID:', modal.id, 'Data:', data);
-    setToastMessage(type === 'approve' ? 'Access granted successfully.' : 'Request rejected.');
-    setShowToast(true);
-    closeModal();
-  };
+  const handleConfirm = async (type, data) => {
+    const isApprove = type === 'approve';
+    const endpoint = isApprove ? 'approve/' : 'reject/';
+    const url = `${baseUrl}/api/employee/v1/request-lock/${endpoint}`;
 
-  const getStatusCount = (filterValue) => {
-    if (filterValue === 'pending') {
-      return pendingData?.length || 0;
-    } else if (filterValue === 'accepted') {
-      return reportsData.filter(row => row.status.toLowerCase() === 'accepted').length;
-    } else if (filterValue === 'rejected') {
-      return reportsData.filter(row => row.status.toLowerCase() === 'rejected').length;
+    // Payload 
+    const reqBody = isApprove
+      ? { request_lock_id: modal.id, access_duration: data.duration }
+      : { request_lock_id: modal.id, rejection_reason: data.reason };
+
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user?.token}`
+        },
+        body: JSON.stringify(reqBody)
+      });
+      const json = await res.json();
+
+      if (json.status === "success") {
+        setToastMessage(isApprove ? 'Access granted successfully.' : 'Request rejected.');
+        setShowToast(true);
+
+        closeModal();
+        fetchLockData();
+      } else {
+        setToastMessage(json.message || "Action failed.");
+        setShowToast(true);
+      }
+    } catch (err) {
+      setToastMessage("An error occurred.");
+      setShowToast(true);
     }
   };
 
-  const handleDownloadCSV = () => {
-    // Define the headers for your CSV
-    const headers = [
-      'Date/Time', 
-      'Location', 
-      'Room', 
-      'Status', 
-      'Access Duration', 
-      'Actioned By', 
-      'Note/Reason'
-    ];
+  const handleDownloadCSV = async () => {
+    try {
+      const selectedHostels = Array.isArray(filters.hostel) && filters.hostel.length > 0
+        ? filters.hostel.join(',')
+        : getAllHostelIds();
 
-    const csvRows = reportsData.map(row => {
-      return [
-        `"${row.datetime}"`,
-        `"${row.location}"`,
-        `"${row.room}"`,
-        `"${row.status}"`,
-        `"${row.duration}"`,
-        `"${row.actionedBy}"`,
-        `"${row.note}"`
-      ].join(','); // Join each column with a comma
-    });
+      let url = `${baseUrl}/api/employee/v1/request-lock/history/download/?hostel_ids=${selectedHostels}`;
 
-    // Combine headers and rows with line breaks
-    const csvString = [headers.join(','), ...csvRows].join('\n');
+      if (filters.status && filters.status !== 'all') url += `&status=${filters.status.toLowerCase()}`;
+      if (filters.fromDate) url += `&start_time=${formatApiDate(filters.fromDate)}`;
+      if (filters.toDate) url += `&end_time=${formatApiDate(filters.toDate)}`;
 
-    // Create a Blob (file-like object) from the CSV string
-    const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
+      const res = await fetch(url, { headers: { Authorization: `Bearer ${user?.token}` } });
+      if (!res.ok) throw new Error("Download failed");
 
-    // Create a temporary link element to trigger the download
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', `Lock_Reports_${new Date().toISOString().split('T')[0]}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    
-    // Clean up the DOM
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
+      // Handle the raw CSV file response
+      const blob = await res.blob();
+      const downloadUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.setAttribute('download', `Lock_Reports_${new Date().toISOString().split('T')[0]}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(downloadUrl);
 
-    // Show a success toast
-    setToastMessage("CSV download started successfully.");
-    setShowToast(true);
+      setToastMessage("CSV download started successfully.");
+      setShowToast(true);
+    } catch (error) {
+      setToastMessage("Failed to download CSV.");
+      setShowToast(true);
+    }
   };
 
-  const paginatedPending = pendingData.slice((pendingPage - 1) * itemsPerPage, pendingPage * itemsPerPage);
-  const paginatedReports = reportsData.slice((reportsPage - 1) * itemsPerPage, reportsPage * itemsPerPage);
-  const totalPendingPages = Math.ceil(pendingData.length / itemsPerPage) || 1;
-  const totalReportsPages = Math.ceil(reportsData.length / itemsPerPage) || 1;
+  // Since the backend already paginates, we pass the data directly
+  const paginatedPending = pendingData;
+  const paginatedReports = reportsData;
+
+  // Calculate total pages based on total_records from the API
+  const totalPendingPages = Math.ceil(totalPending / itemsPerPage) || 1;
+  const totalReportsPages = Math.ceil(totalReports / itemsPerPage) || 1;
 
   return (
     <div className="max-w-7xl mx-auto px-4 md:px-6 py-4 md:py-6 gap-6 flex flex-col min-h-full w-full min-w-0">

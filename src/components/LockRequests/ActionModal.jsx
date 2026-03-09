@@ -7,11 +7,11 @@ const rejectOptions = [
 ];
 
 const durationOptions = [
-  { value: "5 min", label: "5 minutes" },
-  { value: "10 min", label: "10 minutes" },
-  { value: "30 min", label: "30 minutes" },
-  { value: "1 hr", label: "1 hour" },
-  { value: "12 hr", label: "12 hours" },
+  { value: "5", label: "5 minutes" },
+  { value: "10", label: "10 minutes" },
+  { value: "30", label: "30 minutes" },
+  { value: "60", label: "1 hour" },
+  { value: "120", label: "2 hours" },
 ];
 
 const CustomSelect = ({ value, onChange, options, placeholder }) => {

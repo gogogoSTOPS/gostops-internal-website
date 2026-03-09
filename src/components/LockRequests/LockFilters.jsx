@@ -39,14 +39,14 @@ const LockFilters = ({ filters, setFilters, hostels = [], activeTab, onDownload 
   const dropdownRefs = useRef({});
 
   // Filter the configuration based on the active tab
-  const visibleFilters = activeTab === "pending" 
-    ? FILTER_CONFIG.filter((f) => f.id === "hostel") 
+  const visibleFilters = activeTab === "pending"
+    ? FILTER_CONFIG.filter((f) => f.id === "hostel")
     : FILTER_CONFIG;
 
   const hostelOptions = [
     { value: "", label: "All Hostels" },
     ...hostels.map((hostel) => ({
-      value: hostel.slug || hostel, 
+      value: hostel.id || hostel,
       label: hostel.name || hostel,
     })),
   ];
@@ -55,7 +55,7 @@ const LockFilters = ({ filters, setFilters, hostels = [], activeTab, onDownload 
     setFilters((prev) => {
       const baseFilters = FILTER_CONFIG.reduce((acc, curr) => {
         if (!(curr.id in prev)) {
-          acc[curr.id] = curr.id === "status" ? "all" : "";
+          acc[curr.id] = curr.id === "status" ? "all" : curr.id === "hostel" ? [] : "";
         } else {
           acc[curr.id] = prev[curr.id];
         }
@@ -83,10 +83,30 @@ const LockFilters = ({ filters, setFilters, hostels = [], activeTab, onDownload 
     setOpenDropdown(null);
   };
 
+  const handleHostelToggle = (hostelId) => {
+    setFilters((prev) => {
+      const currentHostels = Array.isArray(prev.hostel) ? prev.hostel : [];
+
+      // If user clicks All Hostels, clear the array
+      if (hostelId === "") {
+        return { ...prev, hostel: [] };
+      }
+
+      // Toggle the selected hostel ID
+      const isSelected = currentHostels.includes(hostelId);
+      const newHostels = isSelected
+        ? currentHostels.filter((id) => id !== hostelId)
+        : [...currentHostels, hostelId];
+
+      setOpenDropdown(null);
+      return { ...prev, hostel: newHostels };
+    });
+  };
+
   const clearFilters = () => {
     setFilters(
       FILTER_CONFIG.reduce((acc, curr) => {
-        acc[curr.id] = curr.id === "status" ? "all" : ""; 
+        acc[curr.id] = curr.id === "status" ? "all" : curr.id === "hostel" ? [] : "";
         return acc;
       }, {})
     );
@@ -97,10 +117,10 @@ const LockFilters = ({ filters, setFilters, hostels = [], activeTab, onDownload 
   };
 
   const hasActiveFilters = Object.entries(filters).some(([key, val]) => {
-    // Only check active filters based on what's visible
     const isVisible = visibleFilters.some(f => f.id === key);
     if (!isVisible) return false;
-    
+
+    if (key === "hostel") return Array.isArray(val) && val.length > 0;
     if (key === "status") return val !== "all" && val !== "";
     return val !== "";
   });
@@ -138,22 +158,21 @@ const LockFilters = ({ filters, setFilters, hostels = [], activeTab, onDownload 
             {filter.type === "select" && (
               <div className="relative w-full">
                 <div
-                  className={`${inputBaseStyle} ${
-                    openDropdown === filter.id ? "bg-[#E5E7EB]" : ""
-                  }`}
+                  className={`${inputBaseStyle} ${openDropdown === filter.id ? "bg-[#E5E7EB]" : ""
+                    }`}
                   onClick={() => toggleDropdown(filter.id)}
                 >
                   <div className={dropdownTriggerStyle}>
                     <span className="text-[#0A0A0A] font-medium truncate flex-1 text-left pr-2">
                       {filter.id === "hostel"
-                        ? hostelOptions.find(
-                            (opt) => opt.value === (filters[filter.id] || "")
-                          )?.label || filter.placeholder
+                        ? (Array.isArray(filters.hostel) && filters.hostel.length > 0
+                          ? (filters.hostel.length === 1
+                            ? hostelOptions.find((opt) => opt.value === filters.hostel[0])?.label
+                            : `${filters.hostel.length} Hostels Selected`)
+                          : "All Hostels")
                         : filters[filter.id]
-                        ? filter.options.find(
-                            (opt) => opt.value === filters[filter.id]
-                          )?.label
-                        : filter.placeholder}
+                          ? filter.options.find((opt) => opt.value === filters[filter.id])?.label
+                          : filter.placeholder}
                     </span>
                     <div className="shrink-0">
                       <ChevronDownIcon isOpen={openDropdown === filter.id} />
@@ -169,13 +188,18 @@ const LockFilters = ({ filters, setFilters, hostels = [], activeTab, onDownload 
                     ).map((option) => (
                       <div
                         key={option.value}
-                        onClick={() => handleChange(filter.id, option.value)}
+                        onClick={() => {
+                          if (filter.id === "hostel") {
+                            handleHostelToggle(option.value); // toggle for hostels
+                          } else {
+                            handleChange(filter.id, option.value);
+                          }
+                        }}
                         className={`
                           px-[0.75rem] py-[0.5rem] text-[0.875rem] cursor-pointer transition-colors
-                          ${
-                            filters[filter.id] === option.value
-                              ? "bg-[#F3F3F5] font-semibold text-[#0A0A0A]"
-                              : "text-[#0A0A0A] font-medium hover:bg-[#F3F3F5] hover:text-[#0A0A0A]"
+                          ${filters[filter.id] === option.value
+                            ? "bg-[#F3F3F5] font-semibold text-[#0A0A0A]"
+                            : "text-[#0A0A0A] font-medium hover:bg-[#F3F3F5] hover:text-[#0A0A0A]"
                           }
                         `}
                       >
@@ -196,10 +220,9 @@ const LockFilters = ({ filters, setFilters, hostels = [], activeTab, onDownload 
             disabled={!hasActiveFilters}
             className={`
               flex w-full h-[2.25rem] px-[1rem] justify-center items-center gap-[0.5rem] rounded-[0.5rem] border transition-all duration-200
-              ${
-                hasActiveFilters
-                  ? "border-[rgba(0,0,0,0.10)] bg-white hover:bg-gray-50 cursor-pointer text-[#0A0A0A]"
-                  : "border-transparent bg-gray-50 cursor-not-allowed text-gray-400"
+              ${hasActiveFilters
+                ? "border-[rgba(0,0,0,0.10)] bg-white hover:bg-gray-50 cursor-pointer text-[#0A0A0A]"
+                : "border-transparent bg-gray-50 cursor-not-allowed text-gray-400"
               }
             `}
           >

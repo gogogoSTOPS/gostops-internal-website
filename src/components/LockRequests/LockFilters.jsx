@@ -17,6 +17,7 @@ const FILTER_CONFIG = [
     options: [
       { value: "all", label: "All Statuses" },
       { value: "Accepted", label: "Accepted" },
+      { value: "Pending", label: "Pending" },
       { value: "Rejected", label: "Rejected" },
     ],
   },
@@ -238,7 +239,7 @@ const LockFilters = ({ filters, setFilters, hostels = [], activeTab, onDownload 
           <div className="flex flex-col justify-end w-full h-auto">
             <button
               onClick={onDownload}
-              className="flex w-full h-[2.25rem] px-[1rem] justify-center items-center gap-[0.5rem] rounded-[0.5rem] bg-[#030213] text-white hover:bg-[#1a1a2e] transition-all duration-200"
+              className="flex w-full h-[2.25rem] px-[1rem] justify-center items-center cursor-pointer gap-[0.5rem] rounded-[0.5rem] bg-[#030213] text-white hover:bg-[#1a1a2e] transition-all duration-200"
             >
               <div className="w-4 h-4 flex items-center justify-center">
                 <DownloadIcon />

@@ -13,6 +13,8 @@ const TableData = ({
   setReportsPage,
   totalPendingPages,
   totalReportsPages,
+  totalPendingRecords,
+  totalReportsRecords,
   openModal,
 }) => {
   return (
@@ -112,8 +114,19 @@ const TableData = ({
       {/* Pagination */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-5 py-4 bg-white text-[0.8125rem] text-[#717182]">
         <span className="whitespace-nowrap">
-          Showing {activeTab === 'pending' ? ((pendingPage - 1) * itemsPerPage + 1) : ((reportsPage - 1) * itemsPerPage + 1)}–
-          {activeTab === 'pending' ? Math.min(pendingPage * itemsPerPage, pendingData.length) : Math.min(reportsPage * itemsPerPage, reportsData.length)} of {activeTab === 'pending' ? pendingData.length : reportsData.length} entries
+          {activeTab === 'pending' ? (
+            totalPendingRecords === 0 ? (
+              "Showing 0 of 0 entries"
+            ) : (
+              `Showing ${(pendingPage - 1) * itemsPerPage + 1}–${Math.min(pendingPage * itemsPerPage, totalPendingRecords)} of ${totalPendingRecords} entries`
+            )
+          ) : (
+            totalReportsRecords === 0 ? (
+              "Showing 0 of 0 entries"
+            ) : (
+              `Showing ${(reportsPage - 1) * itemsPerPage + 1}–${Math.min(reportsPage * itemsPerPage, totalReportsRecords)} of ${totalReportsRecords} entries`
+            )
+          )}
         </span>
         <div className="flex gap-1 overflow-x-auto max-w-full items-center">
           <button

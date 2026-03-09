@@ -30,12 +30,19 @@ const LockRequests = () => {
 
   const [filters, setFilters] = useState({
     status: "all",
-    hostel: "all",
-    dateRange: { from: null, to: null },
+    hostel: [], // Array for multiple selection
+    fromDate: "", 
+    toDate: "",
   });
 
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
+
+  // Reset pages to 1 when filters or active tab changes
+  useEffect(() => {
+    setPendingPage(1);
+    setReportsPage(1);
+  }, [filters, activeTab]);
 
   // Helper to get all allowed hostel IDs
   const getAllHostelIds = () => {
@@ -213,9 +220,9 @@ const LockRequests = () => {
           className={`px-5 py-2 text-[0.875rem] font-medium transition-colors relative border-b-2 shrink-0 cursor-pointer ${activeTab === 'pending' ? 'text-[#0A0A0A] border-[#030213]' : 'text-[#717182] border-transparent hover:text-[#0A0A0A]'}`}
         >
           Pending Requests
-          {pendingData.length > 0 && (
+          {totalPending > 0 && (
             <span className="ml-2 bg-[#DC2626] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full align-middle inline-flex items-center justify-center">
-              {pendingData.length}
+              {totalPending}
             </span>
           )}
         </button>
@@ -270,6 +277,8 @@ const LockRequests = () => {
           setReportsPage={setReportsPage}
           totalPendingPages={totalPendingPages}
           totalReportsPages={totalReportsPages}
+          totalPendingRecords={totalPending}
+          totalReportsRecords={totalReports}
 
           // Action Handlers
           openModal={openModal}

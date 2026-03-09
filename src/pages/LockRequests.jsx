@@ -203,7 +203,7 @@ const LockRequests = () => {
     }
   };
 
-  // Since the backend already paginates, we pass the data directly
+  // paginated data
   const paginatedPending = pendingData;
   const paginatedReports = reportsData;
 

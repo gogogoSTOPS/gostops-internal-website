@@ -9,11 +9,10 @@ const MainLayout = () => {
   const location = useLocation();
   const { isAuthenticated, isLoading, logout, user } = useAuth();
 
-  const [userData, setUserData] = useState(user);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [isDesktopSidebarCollapsed, setIsDesktopSidebarCollapsed] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  
+
   const profileRef = useRef(null);
 
   // Sidebar menu items
@@ -26,21 +25,11 @@ const MainLayout = () => {
   const menuItemsHeaderText = [
     { name: 'Incentivise Reviews', href: '/', title: 'Incentivise Reviews', desc: 'Manage and review customer reward claims', },
     { name: 'Lock Requests', href: '/2fa_lock', title: 'Lock & Locker Access', desc: 'Manage lock and locker access requests from guests', },
-  ]
+  ];
 
   // Find the header data based on the current pathname
-  // Fallback to the first item if no match is found
-  const currentHeader = menuItemsHeaderText.find(item => item.href === location.pathname) 
-                        || menuItemsHeaderText[0];
-
-  // Sync userData with user from context
-  useEffect(() => {
-    setUserData(user);
-  }, [user]);
-
-  useEffect(() => {
-    if (!userData) navigate('/login', { replace: true });
-  }, [userData, navigate]);
+  const currentHeader = menuItemsHeaderText.find(item => item.href === location.pathname)
+    || menuItemsHeaderText[0];
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -57,12 +46,13 @@ const MainLayout = () => {
     navigate("/login", { replace: true });
   };
 
+  // Wait for auth to finish loading
   if (isLoading)
     return <div>Loading...</div>;
-  if (!isAuthenticated)
+
+  // If not authenticated, redirect to login cleanly
+  if (!isAuthenticated || !user)
     return <Navigate to="/login" replace />;
-  if (!userData)
-    return null;
 
   return (
     <div className="h-screen bg-gray-50 flex overflow-hidden">
@@ -73,7 +63,7 @@ const MainLayout = () => {
         toggleCollapse={() => setIsDesktopSidebarCollapsed(!isDesktopSidebarCollapsed)}
         menuItems={menuItems}
         handleLogout={handleLogout}
-        userData={userData}
+        userData={user}
       />
 
       {/* Content Area */}
@@ -134,10 +124,10 @@ const MainLayout = () => {
                 {/* Name & EMail */}
                 <div className="flex flex-col items-start self-stretch px-4 pt-3 pb-[1px] border-b border-[#F3F4F6] mb-1">
                   <p className="text-[#101828] text-[1rem] font-medium leading-6 tracking-[-0.312px]">
-                    {userData?.full_name || "User"}
+                    {user?.full_name || "User"}
                   </p>
                   <p className="text-[#6A7282] text-[0.875rem] font-normal leading-5 tracking-[-0.15px] mb-2">
-                    {userData?.email}
+                    {user?.email}
                   </p>
                 </div>
                 {/* Logout Button */}

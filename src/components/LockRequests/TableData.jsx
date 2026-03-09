@@ -2,10 +2,12 @@ import React from 'react'
 
 const TableData = ({
   activeTab,
+
   pendingData,
   reportsData,
   paginatedPending,
   paginatedReports,
+
   itemsPerPage,
   pendingPage,
   setPendingPage,
@@ -15,6 +17,7 @@ const TableData = ({
   totalReportsPages,
   totalPendingRecords,
   totalReportsRecords,
+  
   openModal,
 }) => {
   return (

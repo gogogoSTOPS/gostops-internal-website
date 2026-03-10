@@ -2,7 +2,9 @@ import { useState, useRef, useEffect } from 'react';
 import { CloseIcon, ChevronDownIcon } from '../../icons/svgIcons';
 
 const rejectOptions = [
-  { value: "Rejected", label: "Not Permitted" },
+  { value: "Not Permitted", label: "Not Permitted" },
+  { value: "You can't access", label: "You can't access" },
+  { value: "Request again", label: "Request again" },
   { value: "Others", label: "Others (Specify below)" },
 ];
 

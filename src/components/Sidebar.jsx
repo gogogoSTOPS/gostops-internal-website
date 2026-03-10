@@ -1,9 +1,10 @@
 import { useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { CloseIconDesktop, CloseIconMobile, UserIcon, LogoutIcon } from '../icons/svgIcons';
 
 const Sidebar = ({ isOpen, onClose, isCollapsed, toggleCollapse, menuItems, handleLogout, userData }) => {
   const location = useLocation();
+  const navigate = useNavigate();
 
   // Body Scroll Lock Logic
   useEffect(() => {
@@ -76,9 +77,12 @@ const Sidebar = ({ isOpen, onClose, isCollapsed, toggleCollapse, menuItems, hand
             {menuItems.map((item) => {
               const active = isActive(item.href);
               return (
-                <Link
+                <div
                   key={item.name}
-                  to={item.href}
+                  onClick={() => {
+                    onClose();
+                    navigate(item.href);
+                  }}
                   className={`flex shrink-0 rounded-[0.625rem] transition-colors
                     ${isCollapsed
                       ? 'w-full h-[2.5rem] justify-center items-center'
@@ -100,7 +104,7 @@ const Sidebar = ({ isOpen, onClose, isCollapsed, toggleCollapse, menuItems, hand
                       {item.name}
                     </span>
                   )}
-                </Link>
+                </div>
               );
             })}
           </div>

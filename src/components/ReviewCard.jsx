@@ -43,7 +43,7 @@ const ReviewCard = ({ item, setShowToast, setToastMessage, onRefresh }) => {
             }}
           >
             <img
-              src={item?.photo}
+              src={item?.photo || null}
               alt={item?.userName}
               className="bg-gray-100 h-full w-full object-contain rounded-lg"
             />

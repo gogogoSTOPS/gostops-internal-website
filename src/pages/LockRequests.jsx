@@ -65,7 +65,7 @@ const LockRequests = () => {
         : getAllHostelIds();
 
       if (activeTab === 'pending') {
-        const url = `${baseUrl}/api/employee/v1/get-pending-lock-requests/?hostel_ids=${selectedHostels}&limit=${itemsPerPage}&page=${pendingPage - 1}`;
+        const url = `${baseUrl}/api/employee/v1/get-pending-lock-requests/?hostel_ids=${selectedHostels}&limit=${itemsPerPage}&page=${pendingPage}`;
         const res = await fetch(url, { headers: { Authorization: `Bearer ${user?.token}` } });
         const json = await res.json();
 
@@ -85,7 +85,7 @@ const LockRequests = () => {
           setTotalPending(json.data.total_records);
         }
       } else {
-        let url = `${baseUrl}/api/employee/v1/request-lock/history/?hostel_ids=${selectedHostels}&limit=${itemsPerPage}&page=${reportsPage - 1}`;
+        let url = `${baseUrl}/api/employee/v1/request-lock/history/?hostel_ids=${selectedHostels}&limit=${itemsPerPage}&page=${reportsPage}`;
 
         // Add optional filters
         if (filters.status && filters.status !== 'all') {

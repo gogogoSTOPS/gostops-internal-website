@@ -70,6 +70,7 @@ const LockRequests = () => {
         const json = await res.json();
 
         if (json.status === "success") {
+          console.log(json.data.requests);
           // Map API keys to TableData expected keys
           const mapped = json.data.requests.map(req => ({
             id: req.id,
@@ -97,6 +98,7 @@ const LockRequests = () => {
         const json = await res.json();
 
         if (json.status === "success") {
+          console.log(json.data.requests);
           // Map API keys to TableData expected keys
           const mapped = json.data.requests.map(req => ({
             id: req.id,
@@ -212,7 +214,7 @@ const LockRequests = () => {
   const totalReportsPages = Math.ceil(totalReports / itemsPerPage) || 1;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 md:px-6 py-4 md:py-6 gap-6 flex flex-col min-h-full w-full min-w-0">
+    <div className="max-w-7xl mx-auto px-4 md:px-6 py-4 md:py-6 gap-6 flex flex-col w-full min-w-0">
       {/* Tabs */}
       <div className="flex border-b-2 border-[#E5E7EB] overflow-x-auto whitespace-nowrap [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         <button

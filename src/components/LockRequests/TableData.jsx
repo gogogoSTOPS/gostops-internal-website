@@ -61,6 +61,7 @@ const TableData = ({
                 <td className="py-4 px-5 border-b border-[#F3F4F6] align-middle whitespace-nowrap">
                   <div className="text-[0.875rem] text-[#0A0A0A]">{row.staff}</div>
                   <div className="text-[0.75rem] text-[#717182] mt-0.5">{row.staffPhone}</div>
+                  <div className="text-[0.75rem] text-[#717182] mt-0.5">{row.staffEmail}</div>
                 </td>
                 <td className="py-4 px-5 border-b border-[#F3F4F6] align-middle whitespace-nowrap">
                   <div className="flex gap-2.5">

@@ -79,7 +79,8 @@ const LockRequests = () => {
             room: req.bed_info,
             reason: req.requested_reason,
             staff: req.requested_by_name,
-            staffPhone: req.requested_by_mobile
+            staffPhone: req.requested_by_mobile,
+            staffEmail: req.requested_by_email,
           }));
           setPendingData(mapped);
           setTotalPending(json.data.total_records);

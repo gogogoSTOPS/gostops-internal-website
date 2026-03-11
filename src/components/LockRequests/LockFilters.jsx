@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { ChevronDownIcon, ClearIcon, DownloadIcon } from "../../icons/svgIcons";
+import { ChevronDownIcon, ClearIcon, DownloadIcon, RefreshIcon } from "../../icons/svgIcons";
 
 // Lock Requests Filter Configuration
 const FILTER_CONFIG = [
@@ -35,7 +35,7 @@ const FILTER_CONFIG = [
   },
 ];
 
-const LockFilters = ({ filters, setFilters, hostels = [], activeTab, onDownload }) => {
+const LockFilters = ({ filters, setFilters, hostels = [], activeTab, onDownload, fetchLockData, isLoadingData }) => {
   const [openDropdown, setOpenDropdown] = useState(null);
   const [hostelSearchQuery, setHostelSearchQuery] = useState("");
   const dropdownRefs = useRef({});
@@ -134,7 +134,7 @@ const LockFilters = ({ filters, setFilters, hostels = [], activeTab, onDownload 
 
   return (
     <div className="w-full">
-      <div className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 ${activeTab === "reports" ? "xl:grid-cols-6" : "lg:grid-cols-4"} gap-[1rem] items-end`}>
+      <div className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 ${activeTab === "reports" ? "lg:grid-cols-4 xl:grid-cols-5" : "lg:grid-cols-4"} gap-[1rem] items-end`}>
         {visibleFilters.map((filter) => (
           <div
             key={filter.id}
@@ -184,7 +184,7 @@ const LockFilters = ({ filters, setFilters, hostels = [], activeTab, onDownload 
 
                 {openDropdown === filter.id && (
                   <div className="absolute top-[calc(100%+4px)] left-0 w-full bg-white rounded-[0.5rem] border border-[rgba(0,0,0,0.1)] shadow-lg z-50 overflow-hidden py-1 flex flex-col gap-[2px] max-h-[11rem] overflow-y-auto">
-                    
+
                     {/* Search Input for Hostels */}
                     {filter.id === "hostel" && (
                       <div className="sticky top-0 bg-white z-10 border-b border-[rgba(0,0,0,0.05)] mb-1">
@@ -200,9 +200,9 @@ const LockFilters = ({ filters, setFilters, hostels = [], activeTab, onDownload 
                     )}
 
                     {(filter.id === "hostel"
-                      ? hostelOptions.filter(opt => 
-                          opt.label.toLowerCase().includes(hostelSearchQuery.toLowerCase())
-                        )
+                      ? hostelOptions.filter(opt =>
+                        opt.label.toLowerCase().includes(hostelSearchQuery.toLowerCase())
+                      )
                       : filter.options
                     ).map((option) => (
                       <div
@@ -225,7 +225,7 @@ const LockFilters = ({ filters, setFilters, hostels = [], activeTab, onDownload 
                         {option.label}
                       </div>
                     ))}
-                    
+
                     {/* Show message if no hostels match search */}
                     {filter.id === "hostel" && hostelOptions.filter(opt => opt.label.toLowerCase().includes(hostelSearchQuery.toLowerCase())).length === 0 && (
                       <div className="px-[0.75rem] py-[0.5rem] text-[0.875rem] text-[#717182] italic text-center">
@@ -255,6 +255,20 @@ const LockFilters = ({ filters, setFilters, hostels = [], activeTab, onDownload 
             <ClearIcon disabled={!hasActiveFilters} />
             <span className="text-center text-[0.875rem] font-medium leading-[1.25rem] -tracking-[0.15px]">
               Clear Filters
+            </span>
+          </button>
+        </div>
+
+        {/* Refresh Data Button */}
+        <div className="flex flex-col justify-end w-full h-auto">
+          <button
+            onClick={fetchLockData}
+            disabled={isLoadingData}
+            className="flex w-full h-[2.25rem] px-[1rem] justify-center items-center cursor-pointer gap-[0.5rem] rounded-[0.5rem] bg-[#030213] text-white disabled:opacity-80 disabled:cursor-not-allowed transition-all duration-200"
+          >
+            <RefreshIcon className={`w-4 h-4 ${isLoadingData ? 'animate-spin' : ''}`} />
+            <span className="text-center text-[0.875rem] font-medium leading-[1.25rem] -tracking-[0.15px]">
+              {isLoadingData ? 'Refreshing...' : 'Refresh Data'}
             </span>
           </button>
         </div>

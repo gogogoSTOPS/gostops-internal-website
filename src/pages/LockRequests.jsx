@@ -244,6 +244,8 @@ const LockRequests = () => {
         hostels={user?.hostels_can_access || []}
         activeTab={activeTab}
         onDownload={handleDownloadCSV}
+        fetchLockData={fetchLockData}
+        isLoadingData={isLoadingData}
       />
 
       {/* Error */}

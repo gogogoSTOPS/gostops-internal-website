@@ -83,7 +83,7 @@ const Sidebar = ({ isOpen, onClose, isCollapsed, toggleCollapse, menuItems, hand
                     onClose();
                     navigate(item.href);
                   }}
-                  className={`flex shrink-0 rounded-[0.625rem] transition-colors
+                  className={`flex shrink-0 rounded-[0.625rem] transition-colors cursor-pointer
                     ${isCollapsed
                       ? 'w-full h-[2.5rem] justify-center items-center'
                       : 'w-full h-[2.5rem] px-3 py-[0.625rem] items-center gap-3'

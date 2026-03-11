@@ -4,7 +4,7 @@ import { CloseIcon, ChevronDownIcon } from '../../icons/svgIcons';
 const rejectOptions = [
   { value: "Not Permitted", label: "Not Permitted" },
   { value: "You can't access", label: "You can't access" },
-  { value: "Please Request again", label: "Please Request again" },
+  { value: "Please request again", label: "Please request again" },
   { value: "Others", label: "Others (Specify below)" },
 ];
 

@@ -17,7 +17,7 @@ const TableData = ({
   totalReportsPages,
   totalPendingRecords,
   totalReportsRecords,
-  
+
   openModal,
 }) => {
   return (
@@ -136,14 +136,14 @@ const TableData = ({
           <button
             disabled={activeTab === 'pending' ? pendingPage === 1 : reportsPage === 1}
             onClick={() => activeTab === 'pending' ? setPendingPage(p => p - 1) : setReportsPage(p => p - 1)}
-            className="shrink-0 w-8 h-8 flex items-center justify-center rounded-[0.5rem] border border-[#E5E7EB] bg-white text-[#717182] hover:bg-[#F3F4F6] disabled:opacity-40 disabled:cursor-not-allowed transition-colors font-medium text-lg pb-1"
+            className="shrink-0 w-8 h-8 flex items-center justify-center rounded-[0.5rem] border border-[#E5E7EB] bg-white text-[#717182] hover:bg-[#F3F4F6] disabled:opacity-40 disabled:cursor-not-allowed transition-colors font-medium text-lg pb-1 cursor-pointer"
           >‹</button>
 
           {[...Array(activeTab === 'pending' ? totalPendingPages : totalReportsPages)].map((_, i) => (
             <button
               key={i}
               onClick={() => activeTab === 'pending' ? setPendingPage(i + 1) : setReportsPage(i + 1)}
-              className={`shrink-0 w-8 h-8 flex items-center justify-center rounded-[0.5rem] border font-medium text-[0.8125rem] transition-colors ${(activeTab === 'pending' ? pendingPage : reportsPage) === i + 1
+              className={`shrink-0 w-8 h-8 flex items-center justify-center rounded-[0.5rem] border font-medium text-[0.8125rem] transition-colors cursor-pointer ${(activeTab === 'pending' ? pendingPage : reportsPage) === i + 1
                 ? 'bg-[#030213] text-white border-[#030213]'
                 : 'border-[#E5E7EB] bg-white text-[#0A0A0A] hover:bg-[#F3F4F6]'
                 }`}
@@ -153,7 +153,7 @@ const TableData = ({
           <button
             disabled={activeTab === 'pending' ? pendingPage === totalPendingPages : reportsPage === totalReportsPages}
             onClick={() => activeTab === 'pending' ? setPendingPage(p => p + 1) : setReportsPage(p => p + 1)}
-            className="shrink-0 w-8 h-8 flex items-center justify-center rounded-[0.5rem] border border-[#E5E7EB] bg-white text-[#717182] hover:bg-[#F3F4F6] disabled:opacity-40 disabled:cursor-not-allowed transition-colors font-medium text-lg pb-1"
+            className="shrink-0 w-8 h-8 flex items-center justify-center rounded-[0.5rem] border border-[#E5E7EB] bg-white text-[#717182] hover:bg-[#F3F4F6] disabled:opacity-40 disabled:cursor-not-allowed transition-colors font-medium text-lg pb-1 cursor-pointer"
           >›</button>
         </div>
       </div>

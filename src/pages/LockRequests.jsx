@@ -70,7 +70,6 @@ const LockRequests = () => {
         const json = await res.json();
 
         if (json.status === "success") {
-          console.log(json.data.requests);
           // Map API keys to TableData expected keys
           const mapped = json.data.requests.map(req => ({
             id: req.id,
@@ -99,7 +98,6 @@ const LockRequests = () => {
         const json = await res.json();
 
         if (json.status === "success") {
-          console.log(json.data.requests);
           // Map API keys to TableData expected keys
           const mapped = json.data.requests.map(req => ({
             id: req.id,

@@ -47,6 +47,7 @@ const FILTER_CONFIG = [
 
 const Filters = ({ filters, setFilters, hostels = [] }) => {
   const [openDropdown, setOpenDropdown] = useState(null);
+  const [hostelSearchQuery, setHostelSearchQuery] = useState("");
   const dropdownRefs = useRef({});
 
   const hostelOptions = [
@@ -184,8 +185,23 @@ const Filters = ({ filters, setFilters, hostels = [] }) => {
                 {/* Dropdown Menu */}
                 {openDropdown === filter.id && (
                   <div className="absolute top-[calc(100%+4px)] left-0 w-full bg-white rounded-[0.5rem] border border-[rgba(0,0,0,0.1)] shadow-lg z-50 overflow-hidden py-1 flex flex-col gap-[2px] max-h-[11rem] overflow-y-auto">
+                    
+                    {/* Search Input for Hostels */}
+                    {filter.id === "hostelName" && (
+                      <div className="sticky top-0 bg-white z-10 border-b border-[rgba(0,0,0,0.05)] mb-1">
+                        <input
+                          type="text"
+                          className="w-full bg-white px-[0.75rem] py-[0.5rem] text-[0.875rem] text-[#0A0A0A] outline-none placeholder-[#717182] font-medium transition-colors hover:bg-[#F3F3F5] focus:bg-[#F3F3F5]"
+                          placeholder="Search hostel..."
+                          value={hostelSearchQuery}
+                          onChange={(e) => setHostelSearchQuery(e.target.value)}
+                          onClick={(e) => e.stopPropagation()} // Prevents dropdown from closing when typing
+                        />
+                      </div>
+                    )}
+
                     {(filter.id === "hostelName"
-                      ? hostelOptions
+                      ? hostelOptions.filter(opt => opt.label.toLowerCase().includes(hostelSearchQuery.toLowerCase()))
                       : filter.options
                     ).map((option) => (
                       <div
@@ -203,6 +219,13 @@ const Filters = ({ filters, setFilters, hostels = [] }) => {
                         {option.label}
                       </div>
                     ))}
+
+                    {/* Fallback if no hostels match */}
+                    {filter.id === "hostelName" && hostelOptions.filter(opt => opt.label.toLowerCase().includes(hostelSearchQuery.toLowerCase())).length === 0 && (
+                      <div className="px-[0.75rem] py-[0.5rem] text-[0.875rem] text-[#717182] italic text-center">
+                        No hostels found
+                      </div>
+                    )}
                   </div>
                 )}
               </div>

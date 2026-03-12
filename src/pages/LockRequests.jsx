@@ -31,7 +31,7 @@ const LockRequests = () => {
   const [filters, setFilters] = useState({
     status: "all",
     hostel: [], // Array for multiple selection
-    fromDate: "", 
+    fromDate: "",
     toDate: "",
   });
 
@@ -56,6 +56,27 @@ const LockRequests = () => {
     return `${day}-${month}-${year}`;
   };
 
+  // Helper to format 24 hour datetime to 12 hour format
+  const formatDateTime = (dateTimeStr) => {
+    if (!dateTimeStr) return '–';
+
+    const parts = dateTimeStr.split(' ');
+    if (parts.length < 2) return dateTimeStr; // Fallback if format is unexpected
+
+    const datePart = parts[0];
+    let [hours, minutes] = parts[1].split(':');
+
+    hours = parseInt(hours, 10);
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+
+    const formattedHours = hours.toString().padStart(2, '0');
+
+    return `${datePart} ${formattedHours}:${minutes} ${ampm}`;
+  };
+
   const fetchLockData = async () => {
     setIsLoadingData(true);
     setError(null);
@@ -73,7 +94,7 @@ const LockRequests = () => {
           // Map API keys to TableData expected keys
           const mapped = json.data.requests.map(req => ({
             id: req.id,
-            timestamp: req.created_at,
+            timestamp: formatDateTime(req.created_at),
             property: req.hostel,
             room: req.bed_info,
             reason: req.requested_reason,
@@ -101,7 +122,7 @@ const LockRequests = () => {
           // Map API keys to TableData expected keys
           const mapped = json.data.requests.map(req => ({
             id: req.id,
-            datetime: req.created_at,
+            datetime: formatDateTime(req.created_at),
             location: req.hostel,
             room: req.bed_info,
             status: req.status.charAt(0).toUpperCase() + req.status.slice(1),

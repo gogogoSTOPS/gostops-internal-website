@@ -107,7 +107,6 @@ const LockFilters = ({ filters, setFilters, hostels = [], activeTab, onDownload,
         ? currentHostels.filter((id) => id !== hostelId)
         : [...currentHostels, hostelId];
 
-      setOpenDropdown(null);
       setHostelSearchQuery("");
       return { ...prev, hostel: newHostels };
     });

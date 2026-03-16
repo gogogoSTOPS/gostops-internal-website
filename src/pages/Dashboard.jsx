@@ -15,8 +15,6 @@ const Dashboard = () => {
     { name: "Rejected", textColor: "text-[#FF0000]", filterValue: "rejected" },
   ];
 
-  const PAGE_SIZE = 50;
-
   const [data, setData] = useState([]);
   const [summary, setSummary] = useState({
     total_claims: 0,
@@ -25,8 +23,6 @@ const Dashboard = () => {
     rejected: 0,
   });
   const [isLoadingData, setIsLoadingData] = useState(true); // For API data fetching
-  const [isLoadingMore, setIsLoadingMore] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
   const [filteredData, setFilteredData] = useState([]);
   const [filters, setFilters] = useState({ hostelName: "", timePeriod: "all" }); // Default hostelName to "" (All Hostels)
   const [claimStatus, setClaimStatus] = useState("all");
@@ -36,8 +32,6 @@ const Dashboard = () => {
   const isInitialMount = useRef(true);
   const prevFiltersRef = useRef({});
   const prevClaimStatusRef = useRef("");
-  const offsetRef = useRef(0);
-  const sentinelRef = useRef(null);
 
   // Map API status to dashboard status
   const mapStatus = (apiStatus) => {
@@ -76,29 +70,20 @@ const Dashboard = () => {
     };
   };
 
-  // Fetch claims function with filters and pagination
+  // Fetch claims function with filters
   const fetchClaims = useCallback(
-    async (currentFilters, currentClaimStatus, loadMore = false) => {
+    async (currentFilters, currentClaimStatus) => {
       if (!user?.token) {
         setIsLoadingData(false);
         return;
       }
 
-      if (loadMore) {
-        setIsLoadingMore(true);
-      } else {
-        setIsLoadingData(true);
-        offsetRef.current = 0;
-      }
+      setIsLoadingData(true);
       setError("");
 
       try {
         // Build query parameters
         const queryParams = new URLSearchParams();
-
-        // Add pagination params
-        queryParams.append("limit", PAGE_SIZE);
-        queryParams.append("offset", offsetRef.current);
 
         // Add employee_id
         if (user?.employee_id) {
@@ -162,41 +147,14 @@ const Dashboard = () => {
             });
           }
 
-          // Transform claims data
+          // Transform and set claims data
           const transformedData = (result.data.claims || []).map(
             transformClaimData,
           );
-
-          // Determine if there are more records to load
-          offsetRef.current = offsetRef.current + transformedData.length;
-          setHasMore(transformedData.length >= PAGE_SIZE);
-
-          if (loadMore) {
-            // Append to existing data
-            setData((prev) => [...prev, ...transformedData]);
-            setFilteredData((prev) => [...prev, ...transformedData]);
-          } else {
-            // Replace data (fresh fetch)
-            setData(transformedData);
-            setFilteredData(transformedData);
-          }
+          setData(transformedData);
+          setFilteredData(transformedData); // Set filtered data directly from API
         } else {
           setError(result.message || "Failed to fetch claims");
-          if (!loadMore) {
-            setData([]);
-            setFilteredData([]);
-            setSummary({
-              total_claims: 0,
-              pending: 0,
-              accepted: 0,
-              rejected: 0,
-            });
-          }
-        }
-      } catch (error) {
-        console.error("Error fetching claims:", error);
-        setError("Failed to load claims. Please try again.");
-        if (!loadMore) {
           setData([]);
           setFilteredData([]);
           setSummary({
@@ -206,9 +164,19 @@ const Dashboard = () => {
             rejected: 0,
           });
         }
+      } catch (error) {
+        console.error("Error fetching claims:", error);
+        setError("Failed to load claims. Please try again.");
+        setData([]);
+        setFilteredData([]);
+        setSummary({
+          total_claims: 0,
+          pending: 0,
+          accepted: 0,
+          rejected: 0,
+        });
       } finally {
         setIsLoadingData(false);
-        setIsLoadingMore(false);
       }
     },
     [user?.token, baseUrl],
@@ -286,24 +254,6 @@ const Dashboard = () => {
     filters.timePeriod,
     claimStatus,
   ]);
-
-  // Infinite scroll - observe sentinel element
-  useEffect(() => {
-    const sentinel = sentinelRef.current;
-    if (!sentinel) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && hasMore && !isLoadingMore && !isLoadingData) {
-          fetchClaims(filters, claimStatus, true);
-        }
-      },
-      { threshold: 0.1 },
-    );
-
-    observer.observe(sentinel);
-    return () => observer.disconnect();
-  }, [hasMore, isLoadingMore, isLoadingData, fetchClaims, filters, claimStatus]);
 
   // Handle Stats Card Click - updates claimStatus and triggers API call
   const handleStatClick = (filterValue) => {
@@ -405,14 +355,6 @@ const Dashboard = () => {
                 onRefresh={() => fetchClaims(filters, claimStatus)}
               />
             ))}
-            {/* Sentinel for infinite scroll */}
-            <div ref={sentinelRef} className="h-1" />
-            {isLoadingMore && (
-              <div className="flex items-center justify-center py-4 gap-3">
-                <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-gray-900"></div>
-                <span className="text-[#717182] text-sm">Loading more claims...</span>
-              </div>
-            )}
           </div>
         )
       )}

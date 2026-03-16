@@ -90,7 +90,7 @@ const Sidebar = ({ isOpen, onClose, isCollapsed, toggleCollapse, menuItems, hand
                     }
                     ${active
                       ? 'bg-[#030213] text-white'
-                      : 'bg-white border border-[#E5E7EB] text-[#0A0A0A] [&_path]:stroke-[#0A0A0A]'
+                      : 'bg-white border border-[#E5E7EB] text-[#0A0A0A] [&_path]:stroke-[#0A0A0A] [&_rect]:stroke-[#0A0A0A]'
                     }
                   `}
                 >

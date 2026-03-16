@@ -18,7 +18,7 @@ const MainLayout = () => {
   // Sidebar menu items
   const menuItems = [
     { name: 'Incentivise Reviews', href: '/', icon: <ReviewsIcon /> },
-    { name: 'Lock Requests', href: '/2fa_lock', icon: <LockRequestsIcon stroke={location.pathname !== '/2fa_lock' ? "#0A0A0A" : "white"} /> },
+    { name: 'Lock Requests', href: '/2fa_lock', icon: <LockRequestsIcon /> },
   ];
 
   // Header text for each menu item

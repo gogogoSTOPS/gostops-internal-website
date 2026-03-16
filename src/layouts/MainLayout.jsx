@@ -1,32 +1,35 @@
 import { useState, useEffect, useRef } from 'react';
-import { Outlet, useNavigate, Navigate } from 'react-router-dom';
+import { Outlet, useNavigate, Navigate, useLocation } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
-import { HamburgerIcon, ReviewsIcon, DropdownIcon, UserIcon, LogoutIcon } from '../icons/svgIcons';
+import { HamburgerIcon, ReviewsIcon, DropdownIcon, UserIcon, LogoutIcon, LockRequestsIcon } from '../icons/svgIcons';
 import { useAuth } from '../context/AuthContext';
 
 const MainLayout = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { isAuthenticated, isLoading, logout, user } = useAuth();
 
-  const [userData, setUserData] = useState(user);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [isDesktopSidebarCollapsed, setIsDesktopSidebarCollapsed] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  
+
   const profileRef = useRef(null);
 
+  // Sidebar menu items
   const menuItems = [
     { name: 'Incentivise Reviews', href: '/', icon: <ReviewsIcon /> },
+    { name: 'Lock Requests', href: '/2fa_lock', icon: <LockRequestsIcon stroke={location.pathname !== '/2fa_lock' ? "#0A0A0A" : "white"} /> },
   ];
 
-  // Sync userData with user from context
-  useEffect(() => {
-    setUserData(user);
-  }, [user]);
+  // Header text for each menu item
+  const menuItemsHeaderText = [
+    { name: 'Incentivise Reviews', href: '/', title: 'Incentivise Reviews', desc: 'Manage and review customer reward claims', },
+    { name: 'Lock Requests', href: '/2fa_lock', title: 'Lock & Locker Access', desc: 'Manage lock and locker access requests from guests', },
+  ];
 
-  useEffect(() => {
-    if (!userData) navigate('/login', { replace: true });
-  }, [userData, navigate]);
+  // Find the header data based on the current pathname
+  const currentHeader = menuItemsHeaderText.find(item => item.href === location.pathname)
+    || menuItemsHeaderText[0];
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -43,12 +46,13 @@ const MainLayout = () => {
     navigate("/login", { replace: true });
   };
 
+  // Wait for auth to finish loading
   if (isLoading)
     return <div>Loading...</div>;
-  if (!isAuthenticated)
+
+  // If not authenticated, redirect to login cleanly
+  if (!isAuthenticated || !user)
     return <Navigate to="/login" replace />;
-  if (!userData)
-    return null;
 
   return (
     <div className="h-screen bg-gray-50 flex overflow-hidden">
@@ -59,7 +63,7 @@ const MainLayout = () => {
         toggleCollapse={() => setIsDesktopSidebarCollapsed(!isDesktopSidebarCollapsed)}
         menuItems={menuItems}
         handleLogout={handleLogout}
-        userData={userData}
+        userData={user}
       />
 
       {/* Content Area */}
@@ -88,17 +92,17 @@ const MainLayout = () => {
           {/* Desktop Title */}
           <div className="hidden md:flex flex-col items-baseline gap-1">
             <h2 className="text-[#0A0A0A] text-[1.5rem] font-bold leading-8 tracking-[0.07px]">
-              Incentivise Reviews
+              {currentHeader.title}
             </h2>
             <span className="text-[#717182] text-[0.875rem] font-normal leading-5 tracking-[-0.15px] ml-1">
-              Manage and review customer reward claims
+              {currentHeader.desc}
             </span>
           </div>
 
           {/* Mobile Title */}
           <div className="md:hidden">
             <h2 className="text-[#0A0A0A] text-[1.25rem] font-bold leading-7 tracking-[-0.449px]">
-              Incentivise Reviews
+              {currentHeader.title}
             </h2>
           </div>
 
@@ -120,10 +124,10 @@ const MainLayout = () => {
                 {/* Name & EMail */}
                 <div className="flex flex-col items-start self-stretch px-4 pt-3 pb-[1px] border-b border-[#F3F4F6] mb-1">
                   <p className="text-[#101828] text-[1rem] font-medium leading-6 tracking-[-0.312px]">
-                    {userData?.full_name || "User"}
+                    {user?.full_name || "User"}
                   </p>
                   <p className="text-[#6A7282] text-[0.875rem] font-normal leading-5 tracking-[-0.15px] mb-2">
-                    {userData?.email}
+                    {user?.email}
                   </p>
                 </div>
                 {/* Logout Button */}

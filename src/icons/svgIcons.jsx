@@ -198,4 +198,90 @@ const ToastIcon = () => (
   </svg>
 );
 
-export { ChevronDownIcon, SearchIcon, ClearIcon, EmailIcon, PasswordIcon, BackIcon, CloseIconDesktop, CloseIconMobile, ReviewsIcon, UserIcon, LogoutIcon, HamburgerIcon, DropdownIcon, HostelIcon, DateIcon, BookingOrderIcon, OTAIcon, PhoneIcon, CardEmailIcon, AcceptIcon, RejectIcon, DownloadIcon, CloseIcon, ToastIcon };
+const LockRequestsIcon = ({ stroke = "white" }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+    <rect x="3" y="2.5" width="14" height="10" rx="1.5" stroke={stroke} strokeWidth="1.667" strokeLinecap="round" strokeLinejoin="round"></rect>
+    <path d="M7.5 15V17.5" stroke={stroke} strokeWidth="1.667" strokeLinecap="round"></path>
+    <path d="M12.5 15V17.5" stroke={stroke} strokeWidth="1.667" strokeLinecap="round"></path>
+    <rect x="6" y="6" width="3" height="3.5" rx="0.5" stroke={stroke} strokeWidth="1.2"></rect>
+    <rect x="11" y="6" width="3" height="3.5" rx="0.5" stroke={stroke} strokeWidth="1.2"></rect>
+  </svg>
+);
+
+const RefreshIcon = ({ className = "w-4 h-4" }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+  >
+    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+    <path d="M3 3v5h5" />
+  </svg>
+);
+
+const SearchIconHostel = ({ className = "w-4 h-4" }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+  >
+    <circle cx="11" cy="11" r="8" />
+    <path d="m21 21-4.3-4.3" />
+  </svg>
+);
+
+const CheckIcon = ({ className = "w-4 h-4" }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+  >
+    <polyline points="20 6 9 17 4 12" />
+  </svg>
+);
+
+export {
+  ChevronDownIcon,
+  SearchIcon,
+  ClearIcon,
+  EmailIcon,
+  PasswordIcon,
+  BackIcon,
+  CloseIconDesktop,
+  CloseIconMobile,
+  ReviewsIcon,
+  UserIcon,
+  LogoutIcon,
+  HamburgerIcon,
+  DropdownIcon,
+  HostelIcon,
+  DateIcon,
+  BookingOrderIcon,
+  OTAIcon,
+  PhoneIcon,
+  CardEmailIcon,
+  AcceptIcon,
+  RejectIcon,
+  DownloadIcon,
+  CloseIcon,
+  ToastIcon,
+  LockRequestsIcon,
+  RefreshIcon,
+  SearchIconHostel,
+  CheckIcon,
+};

@@ -4,6 +4,7 @@ import Dashboard from './pages/Dashboard'
 import './App.css'
 import LoginPage from './pages/LoginPage'
 import { AuthProvider } from './context/AuthContext'
+import LockRequests from './pages/LockRequests'
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/" element={<MainLayout />}>
             <Route index element={<Dashboard />} />
+            <Route path="2fa_lock" element={<LockRequests />} />
           </Route>
         </Routes>
       </BrowserRouter>
